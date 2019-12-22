@@ -23,9 +23,9 @@ class Game(object):
         #                    City(self.date, "Norfolk", (280, 360)),
         #                    City(self.date, "Jacksonville", (15, 750)),
         #                    ]
-        # self.cities = random.sample(possible_cities, 3)
+        self.cities = [] #random.sample(possible_cities, 3)
         #
-        # self.players = [Player()]
+        self.players = [] #[Player()]
 
     # @property
     # def units(self):
