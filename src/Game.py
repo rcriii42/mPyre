@@ -1,10 +1,9 @@
 """Game.py - Contains the Game object that holds all objects in the game - players, cities, 
-   dredges, and the game world."""
-# Model 
-import datetime
+   dredges, and the game Map."""
+
 import random
-from City import City
-from Player import Player
+#from City import City
+#from Player import Player
 
 Demo = True
 
@@ -28,8 +27,8 @@ class Game(object):
         #
         # self.players = [Player()]
 
-    @property
-    def units(self):
-        """return a list of all dredges"""
-        return comprehension_flatten([p.units for p in self.players])  # this returns a flat list of all units
+    # @property
+    # def units(self):
+    #     """return a list of all dredges"""
+    #     return comprehension_flatten([p.units for p in self.players])  # this returns a flat list of all units
 
