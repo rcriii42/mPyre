@@ -8,6 +8,7 @@ class World(object):
         self.id=random.randint(101,1001)
         self.end = False
         self.G = Game.Game()
+        self.history = {}
     
     def quit(self):
         self.end = True
