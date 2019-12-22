@@ -140,7 +140,7 @@ class GameWindow(object):
     def __init__(self, width=700, height=800, timeScale=1):
         
         self.max_frame_rate = 10    #max frame rate in frames-per-second
-        # self.clock = pygame.time.Clock()
+        self.clock = pygame.time.Clock()
         
         pygame.init()
         self.screenSize = width, height
@@ -201,7 +201,7 @@ class GameWindow(object):
         #         self.game_plane.sub(d.plane)
                 
         self.turn_status.text = "Turn: {0:,}".format(int(game.turn))
-        self.player_status.text = "Value: {}".format(game.current_player.name)
+        #self.player_status.text = "Value: {}".format(game.current_player.name)
         self.screen.update()
         self.screen.render()
         
@@ -235,11 +235,8 @@ class GameWindow(object):
     
     def mainloop(self, controller):
         """The mainloop for the game, expects a controller to manage the game objects"""
-        elapsed=1
         drag_dredge = False
         while controller.end != True:
-            #Update the time
-            messages = controller.step(elapsed)
             self.update(controller.G)
             # for m in messages:
             #     if m[1]:
@@ -263,7 +260,7 @@ class GameWindow(object):
                 elif e.type == MOUSEBUTTONUP:# and drag_dredge:
                     last_mouse_up = e
             if last_mouse_move:
-                #self.next_message = "Moved to: %s"%`last_mouse_move.pos`
+                self.next_message = "Moved to: {}".format(last_mouse_move.pos)
                 pass
             # if last_mouse_down:
             #     if self.city_bubble:
