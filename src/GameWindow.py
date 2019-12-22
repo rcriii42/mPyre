@@ -153,17 +153,17 @@ class GameWindow(object):
         pygame.display.flip()
         
         # #The game screen
-        # sea_tile = pygame.image.load(os.path.join('graphics', 'sea_tile_32x32.png')).convert()
-        # self.sea_tiles = [sea_tile]*250
+        plains_tile = pygame.image.load(os.path.join('graphics', 'plains_tile_32x32.png')).convert()
+        self.tiles = [plains_tile]*250
         # self.sea_tiles.append(pygame.image.load(os.path.join('graphics', 'whale_tile_32x32.png')).convert())
         # self.sea_tiles.append(pygame.image.load(os.path.join('graphics', 'tugboat_tile_32x32.png')).convert())
         # self.sea_tiles.append(pygame.image.load(os.path.join('graphics', 'turtle_tile_32x32.png')).convert())
         # self.sea_tiles.append(pygame.image.load(os.path.join('graphics', 'swordfish_tile_32x32.png')).convert())
-        # menu_margin = width#*.75
-        # self.game_plane = clickndrag.Plane("game screen", Rect(0, 0, menu_margin, height))
-        # self.game_background = tile_texture(self.game_plane.image, self.sea_tiles)
-        # self.game_plane.image.blit(self.game_background, (0,0))
-        # self.screen.sub(self.game_plane)
+        menu_margin = width#*.75
+        self.game_plane = clickndrag.Plane("game screen", Rect(0, 0, menu_margin, height))
+        self.game_background = tile_texture(self.game_plane.image, self.tiles)
+        self.game_plane.image.blit(self.game_background, (0,0))
+        self.screen.sub(self.game_plane)
         
         #The main status display - Date and player $$
         self.turn_status = clickndrag.gui.Button("Turn: 1",
