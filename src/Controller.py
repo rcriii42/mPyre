@@ -33,5 +33,5 @@ class World(object):
                 step_messages.extend(myplayer.turn_step(self.G))
 
         # Record world for history I'm sure this will be interesting later 
-        self.history[self.G.Turn]=step_messages
+        self.history[self.G.turn]=step_messages
         return step_messages
