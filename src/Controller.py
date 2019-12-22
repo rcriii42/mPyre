@@ -13,7 +13,7 @@ class World(object):
     def quit(self):
         self.end = True
     
-    def step(self, move_type=('end_turn')):
+    def step(self, move_type=('end_turn',)):
         """Primary logic loop for a 'move'
 
         move_type is a tuple: ('text indicating the move',
@@ -21,7 +21,8 @@ class World(object):
                                ...)
         """
         step_messages = []
-        if move_type[0] == "end_turn":
+        if move_type[0] == 'end_turn':
+            print('Advancing turn to {}'.format(self.G.turn+1))
             self.G.turn += 1
             step_messages.append("Turn: {0:,}".format(int(self.G.turn)))
             # Run World Value / Progress Calcs
