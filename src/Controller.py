@@ -1,8 +1,5 @@
 """Controller - The controller object that mediates between the game world and the display window"""
-import random, datetime
-import Game
-
-days_to_sec = 24*60*60
+import random
 
 class World(object):
     """ global controller construct"""
