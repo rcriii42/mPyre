@@ -168,7 +168,7 @@ class GameWindow(object):
         #The main status display - Date and player $$
         self.turn_status = clickndrag.gui.Button("Turn: 1",
                                                 Rect(0, 0, 150, 15),
-                                                None) #callback placeholder
+                                                self.next_turn) #callback placeholder
         self.screen.sub(self.turn_status)
         self.player_status = clickndrag.gui.Button("Player: player_1",
                                                    Rect(150, 0, 125, 15),
@@ -177,6 +177,8 @@ class GameWindow(object):
         self.status_windows = {}
         
         self.city_bubble = None
+
+        self.advance_turn = False
 
         pygame.display.flip()
 
@@ -232,6 +234,10 @@ class GameWindow(object):
 
     def quit(self):
         pygame.quit()
+
+    def next_turn(self, object=None):
+        """The user wishes to end the turn"""
+        self.advance_turn = True
     
     def mainloop(self, controller):
         """The mainloop for the game, expects a controller to manage the game objects"""
@@ -296,6 +302,9 @@ class GameWindow(object):
             #         #self.next_message = "dragging dredge %s to %s"%(d.name, `dredge_drag_to`)
             
             #move on with our lives
+            if self.advance_turn:
+                controller.step()
+                self.advance_turn = False
             pygame.event.clear()
             if self.next_message: print(self.next_message)
             elapsed = self.clock.tick(self.max_frame_rate)
