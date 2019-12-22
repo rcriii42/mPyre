@@ -1,11 +1,13 @@
 """Controller - The controller object that mediates between the game world and the display window"""
 import random
+import Game
 
 class World(object):
     """ global controller construct"""
     def __init__(self):
         self.id=random.randint(101,1001)
         self.end = False
+        self.G = Game.Game()
     
     def quit(self):
         self.end = True
