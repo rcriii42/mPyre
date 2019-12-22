@@ -7,32 +7,32 @@ days_to_sec = 24*60*60
 class World(object):
     """ global controller construct"""
     def __init__(self):
-        self.id=random.randint(101,1001) 
-        self.timeScale = 1          #Number of seconds per day in game-time
-        self.time = 0               #realtime in seconds since start of game
-        self.G= Game.Game()
-        self.end = False 
-        self.history={}
+        self.id=random.randint(101,1001)
+        self.end = False
     
     def quit(self):
         self.end = True
     
-    def step(self, elapsedtime=1, GW=False):
-        # Primary logic loop for a 'turn'
-        self.time=self.time + elapsedtime/1000.
-        self.elapsedtime = elapsedtime/1000.
-        # Run World Value / Progress Calcs
+    def step(self, move_type=('end_turn')):
+        """Primary logic loop for a 'move'
+
+        move_type is a tuple: ('text indicating the move',
+                               other objects related to the move,
+                               ...)
+        """
         step_messages = []
-        self.G.date += datetime.timedelta(days = elapsedtime/1000./self.timeScale)
-        decimal_days = elapsedtime/1000./self.timeScale
-        for mycity in self.G.cities:
-            #note that the cities update their projects
-            step_messages.extend(mycity.time_step(decimal_days, self.G))
-            
-        for myplayer in self.G.players:
-            #Note that players update their dredges
-            step_messages.extend(myplayer.time_step(decimal_days, self.G))
-        
+        if move_type[0] == "end_turn":
+            self.G.turn += 1
+            step_messages.append("Turn: {0:,}".format(int(self.G.turn)))
+            # Run World Value / Progress Calcs
+            for mycity in self.G.cities:
+                #note that the cities update their projects
+                step_messages.extend(mycity.turn_step(self.G))
+
+            for myplayer in self.G.players:
+                #Note that players update their dredges
+                step_messages.extend(myplayer.turn_step(self.G))
+
         # Record world for history I'm sure this will be interesting later 
-        self.history[self.time]=self
+        self.history[self.G.Turn]=step_messages
         return step_messages
