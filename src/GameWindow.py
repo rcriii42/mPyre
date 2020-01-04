@@ -47,91 +47,89 @@ class MessageBubble(clickndrag.gui.OutlinedText):
             self.destroy()
         return
 
-# class CityStatus(clickndrag.gui.Container):
-#     """
-#     CityStatus - Class to wrap a status window for a city that updates each turn
-#     """
-#     def __init__(self, name, city, padding = 0, background_color = None):
-#         """
-#         initialize.  Initialized with a name, destroy button in upper right, and
-#         four lines per project in the city.
-#         """
-#         clickndrag.gui.Container.__init__(self, name, padding, background_color)
-#         self.city = city
-#         self.project_status = {}    #a dict of lists of labels for each project
-#
-#         city_data_strs = {'city_name':city.name}
-#         city_data_strnames=[]
-#         self.num_proj=-1
-#         for p in city.projects:
-#             self.num_proj += 1
-#             city_data_strnames.extend(['name_%d'%self.num_proj,
-#                                        'size_%d'%self.num_proj,
-#                                        'value_%d'%self.num_proj,
-#                                        'dredges_%d'%self.num_proj])
-#             city_data_strs['name_%d'%self.num_proj]="%s"%p.name
-#             city_data_strs['size_%d'%self.num_proj]="  Size: %0.0f"%p.quantity
-#             city_data_strs['value_%d'%self.num_proj]="  Value: $%0.0f"%p.total_value
-#             city_data_strs['dredges_%d'%self.num_proj]="  Dredges: %i %% Done: %.1f"%(len(p.dredges),p.progress()*100)
-#         name_length = max([len(city_data_strs[s]) for s in city_data_strs])*char_width+char_width
-#         name_label=clickndrag.gui.Label('city_name',
-#                                         city.name,
-#                                         Rect(0, 0, name_length, 15),
-#                                         background_color=teal)
-#         self.sub(name_label)
-#         destroy_button = clickndrag.gui.Button('X',
-#                                                Rect(name_label.rect.width-char_width, 0, char_width, 15),
-#                                                lambda x: x.parent.parent.destroy(),
-#                                                background_color=teal)
-#         name_label.sub(destroy_button)
-#         n=-1
-#         for p in city.projects:
-#             n += 1
-#             self.add_project_display(p, n)
-#
-#     def add_project_display(self, p, pID):
-#         """Add a new project"""
-#         city_data_strnames = ['name_%d'%pID,'size_%d'%pID,'value_%d'%pID,'dredges_%d'%pID]
-#         city_data_strs = {}
-#         city_data_strs['name_%d'%pID]="%s"%p.name
-#         city_data_strs['size_%d'%pID]="  Size: %0.0f"%p.quantity
-#         city_data_strs['value_%d'%pID]="  Value: $%0.0f"%p.total_value
-#         city_data_strs['dredges_%d'%pID]="  Dredges: %i %% Done: %.1f"%(len(p.dredges),p.progress()*100)
-#         self.project_status[p] = []
-#         str_len = max([len(city_data_strs[s]) for s in city_data_strs])*char_width
-#         for s in city_data_strnames:
-#             if 'name' in s:
-#                 color = buff
-#             else:
-#                 color = None
-#             L = clickndrag.gui.Label(s,
-#                                      city_data_strs[s],
-#                                      Rect(0, 0, str_len, 15),
-#                                      background_color = color)
-#             self.sub(L)
-#             self.project_status[p].append(L)
-#
-#     def update(self):
-#         """
-#         Update the labels for each project, then call base class update.
-#         """
-#         for p in self.project_status:
-#             if p not in self.city.projects:
-#                 #this project has disappeared, remove and destroy the labels
-#                 for x in self.project_status[p]:
-#                     self.project_status[p].remove(x)
-#                     x.destroy()
-#         for p in self.city.projects:
-#             if p not in self.project_status:
-#                 #this is a new project, add it
-#                 self.num_proj += 1
-#                 self.add_project_display(p, self.num_proj)
-#             self.project_status[p][0].text = "%s"%p.name
-#             self.project_status[p][1].text = "  Size: %0.0f"%p.quantity
-#             self.project_status[p][2].text = "  Value: $%0.0f"%p.total_value
-#             self.project_status[p][3].text = "  Dredges: %i %% Done: %.1f"%(len(p.dredges),p.progress()*100)
-#
-#         clickndrag.gui.Container.update(self)
+class CityStatus(clickndrag.gui.Container):
+    """
+    CityStatus - Class to wrap a status window for a city that updates each turn
+    """
+    def __init__(self, name, city, padding = 0, background_color = None):
+        """
+        initialize.  Initialized with a name, destroy button in upper right, and
+        four lines per project in the city.
+        """
+        clickndrag.gui.Container.__init__(self, name, padding, background_color)
+        self.city = city
+
+        city_data_strs = {'city_name':city.name}
+        self.num_proj=-1
+        # for p in city.projects:
+        #     self.num_proj += 1
+        #     city_data_strnames.extend(['name_%d'%self.num_proj,
+        #                                'size_%d'%self.num_proj,
+        #                                'value_%d'%self.num_proj,
+        #                                'dredges_%d'%self.num_proj])
+        #     city_data_strs['name_%d'%self.num_proj]="%s"%p.name
+        #     city_data_strs['size_%d'%self.num_proj]="  Size: %0.0f"%p.quantity
+        #     city_data_strs['value_%d'%self.num_proj]="  Value: $%0.0f"%p.total_value
+        #     city_data_strs['dredges_%d'%self.num_proj]="  Dredges: %i %% Done: %.1f"%(len(p.dredges),p.progress()*100)
+        name_length = max([len(city_data_strs[s]) for s in city_data_strs])*char_width+char_width
+        name_label=clickndrag.gui.Label('city_name',
+                                        city.name,
+                                        Rect(0, 0, name_length, 15),
+                                        background_color=teal)
+        self.sub(name_label)
+        destroy_button = clickndrag.gui.Button('X',
+                                               Rect(name_label.rect.width-char_width, 0, char_width, 15),
+                                               lambda x: x.parent.parent.destroy(),
+                                               background_color=teal)
+        name_label.sub(destroy_button)
+        # n=-1
+        # for p in city.projects:
+        #     n += 1
+        #     self.add_project_display(p, n)
+
+    # def add_project_display(self, p, pID):
+    #     """Add a new project"""
+    #     city_data_strnames = ['name_%d'%pID,'size_%d'%pID,'value_%d'%pID,'dredges_%d'%pID]
+    #     city_data_strs = {}
+    #     city_data_strs['name_%d'%pID]="%s"%p.name
+    #     city_data_strs['size_%d'%pID]="  Size: %0.0f"%p.quantity
+    #     city_data_strs['value_%d'%pID]="  Value: $%0.0f"%p.total_value
+    #     city_data_strs['dredges_%d'%pID]="  Dredges: %i %% Done: %.1f"%(len(p.dredges),p.progress()*100)
+    #     self.project_status[p] = []
+    #     str_len = max([len(city_data_strs[s]) for s in city_data_strs])*char_width
+    #     for s in city_data_strnames:
+    #         if 'name' in s:
+    #             color = buff
+    #         else:
+    #             color = None
+    #         L = clickndrag.gui.Label(s,
+    #                                  city_data_strs[s],
+    #                                  Rect(0, 0, str_len, 15),
+    #                                  background_color = color)
+    #         self.sub(L)
+    #         self.project_status[p].append(L)
+
+    def update(self):
+        """
+        Update the labels for each project, then call base class update.
+        """
+        # for p in self.project_status:
+        #     if p not in self.city.projects:
+        #         #this project has disappeared, remove and destroy the labels
+        #         for x in self.project_status[p]:
+        #             self.project_status[p].remove(x)
+        #             x.destroy()
+        # for p in self.city.projects:
+        #     if p not in self.project_status:
+        #         #this is a new project, add it
+        #         self.num_proj += 1
+        #         self.add_project_display(p, self.num_proj)
+        #     self.project_status[p][0].text = "%s"%p.name
+        #     self.project_status[p][1].text = "  Size: %0.0f"%p.quantity
+        #     self.project_status[p][2].text = "  Value: $%0.0f"%p.total_value
+        #     self.project_status[p][3].text = "  Dredges: %i %% Done: %.1f"%(len(p.dredges),p.progress()*100)
+
+        clickndrag.gui.Container.update(self)
 
 class GameWindow(object):
     """
@@ -208,23 +206,23 @@ class GameWindow(object):
         pygame.display.flip()
         return True
     
-    # def build_city_status(self, bubble):
-    #     c=bubble.city
-    #     if c in self.status_windows:
-    #         self.status_windows[c].destroy()
-    #     city_status = CityStatus(c.name, c)
-    #
-    #     #place city status where it will not lap off the edge of the screen, starting in top left
-    #     if c.plane.rect.left-city_status.rect.width>self.game_plane.rect.left and c.plane.rect.top-city_status.rect.height>self.game_plane.rect.top:
-    #         city_status.rect.bottomright = c.plane.rect.topleft
-    #     elif c.plane.rect.right+city_status.rect.width<self.game_plane.rect.right and c.plane.rect.top-city_status.rect.height>self.game_plane.rect.top:
-    #         city_status.rect.bottomleft = c.plane.rect.topright
-    #     elif c.plane.rect.right+city_status.rect.width>self.game_plane.rect.right and c.plane.rect.bottom+city_status.rect.height<self.game_plane.rect.bottom:
-    #         city_status.rect.topleft = c.plane.rect.bottomright
-    #     else:
-    #         city_status.rect.topright = c.plane.rect.bottomleft
-    #     self.game_plane.sub(city_status)
-    #     self.status_windows[c] = city_status
+    def build_city_status(self, bubble):
+        c = bubble.city
+        if c in self.status_windows:
+            self.status_windows[c].destroy()
+        city_status = CityStatus(c.name, c)
+
+        #place city status where it will not lap off the edge of the screen, starting in top left
+        if c.plane.rect.left-city_status.rect.width>self.game_plane.rect.left and c.plane.rect.top-city_status.rect.height>self.game_plane.rect.top:
+            city_status.rect.bottomright = c.plane.rect.topleft
+        elif c.plane.rect.right+city_status.rect.width<self.game_plane.rect.right and c.plane.rect.top-city_status.rect.height>self.game_plane.rect.top:
+            city_status.rect.bottomleft = c.plane.rect.topright
+        elif c.plane.rect.right+city_status.rect.width>self.game_plane.rect.right and c.plane.rect.bottom+city_status.rect.height<self.game_plane.rect.bottom:
+            city_status.rect.topleft = c.plane.rect.bottomright
+        else:
+            city_status.rect.topright = c.plane.rect.bottomleft
+        self.game_plane.sub(city_status)
+        self.status_windows[c] = city_status
         
     def post_quit(self):
         q = pygame.event.Event(pygame.QUIT)
@@ -266,23 +264,23 @@ class GameWindow(object):
             if last_mouse_move:
                 #self.next_message = "Moved to: {}".format(last_mouse_move.pos)
                 pass
-            # if last_mouse_down:
-            #     if self.city_bubble:
-            #         self.city_bubble.destroy()
-            #         self.city_bubble = None
-            #     #self.next_message = "Mouse click: %s %s"%(`last_mouse_down.pos`, `last_mouse_down.button`)
-            #     for c in controller.G.cities:
-            #         #did we click on a city?
-            #         if c.plane.rect.collidepoint(last_mouse_down.pos):
-            #             self.next_message =  "clicked on city of %s"%c.name
-            #             bubble_loc = Rect((c.location[0]+c.image_size[0],
-            #                               c.location[1]-15),
-            #                               (len(c.name)*8, 15))
-            #             self.city_bubble = clickndrag.gui.Button(c.name,
-            #                                                      bubble_loc,
-            #                                                      self.build_city_status)
-            #             self.city_bubble.city = c
-            #             self.game_plane.sub(self.city_bubble)
+            if last_mouse_down:
+                if self.city_bubble:
+                    self.city_bubble.destroy()
+                    self.city_bubble = None
+                #self.next_message = "Mouse click: %s %s"%(`last_mouse_down.pos`, `last_mouse_down.button`)
+                for c in controller.G.cities:
+                    #did we click on a city?
+                    if c.plane.rect.collidepoint(last_mouse_down.pos):
+                        self.next_message =  "clicked on city of %s"%c.name
+                        bubble_loc = Rect((c.coords[0]+c.image_size[0],
+                                          c.coords[1]-15),
+                                          (len(c.name)*8, 15))
+                        self.city_bubble = clickndrag.gui.Button(c.name,
+                                                                 bubble_loc,
+                                                                 self.build_city_status)
+                        self.city_bubble.city = c
+                        self.game_plane.sub(self.city_bubble)
             #     for d in controller.G.dredges:
             #         #How about a dredge?
             #         if d.plane.rect.collidepoint(last_mouse_down.pos):
