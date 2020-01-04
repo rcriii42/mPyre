@@ -4,16 +4,14 @@ Space - the meta object for all objects that can be on a map
 Map - a dictionary holding all the spaces on a map
 """
 
-class Space:
+class Space(object):
     """Space - meta object"""
 
-    def __init__(self, coords=(0,0), image=None, owner=None):
+    def __init__(self, coords=(0,0)):
         self.coords = coords
-        self.image = image
-        self.owner = owner
 
 
-class Map:
+class Map(object):
     """Map - meta object"""
 
     def __init__(self, name='The Map', dims=(10,10)):
