@@ -4,7 +4,7 @@ Space - the meta object for all objects that can be on a map
 Map - a dictionary holding all the spaces on a map
 """
 
-class Space(object):
+class Unit(object):
     """Space - meta object"""
 
     def __init__(self, coords=(0,0)):

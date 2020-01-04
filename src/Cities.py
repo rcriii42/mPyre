@@ -3,12 +3,12 @@ Cities - Contain s the code for City objects
 """
 import os
 import pygame
-from BaseObjects import Space
+from BaseObjects import Unit
 
 city_tile_path = os.path.join('graphics', 'city_tile_32x32.png')
 
 
-class City(Space):
+class City(Unit):
     """
     Builds units and must be conquered to win the game.
     """
