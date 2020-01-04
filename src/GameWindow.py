@@ -154,9 +154,7 @@ class GameWindow(object):
         
         # #The game screen
         plains_tile = pygame.image.load(os.path.join('graphics', 'plains_tile_32x32.png')).convert()
-        city_tile = pygame.image.load(os.path.join('graphics', 'city_tile_32x32.png')).convert()
         self.tiles = [plains_tile]*100
-        self.tiles.append(city_tile)
         menu_margin = width#*.75
         self.game_plane = clickndrag.Plane("game screen", Rect(0, 0, menu_margin, height))
         self.game_background = tile_texture(self.game_plane.image, self.tiles)
