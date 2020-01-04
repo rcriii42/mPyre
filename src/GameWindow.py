@@ -176,17 +176,19 @@ class GameWindow(object):
 
         self.advance_turn = False
 
+        print(self)
+
         pygame.display.flip()
 
     def update(self, game):
         """update - update the game window"""
-        #self.game_plane.image.blit(self.game_background, (0,0)) #reset background drawing
-        # for c in game.cities:
-        #     if not c.plane:
-        #         c.plane = clickndrag.Plane("city of %s"%c.name, Rect(c.location,c.image_size))
-        #         c.plane.image.blit(c.image, (0,0))
-        #         self.game_plane.sub(c.plane)
-        #
+        self.game_plane.image.blit(self.game_background, (0,0)) #reset background drawing
+        for c in game.cities:
+            if not c.plane:
+                c.plane = clickndrag.Plane("city of %s"%c.name, Rect(c.coords,c.image_size))
+                c.plane.image.blit(c.image, (0,0))
+                self.game_plane.sub(c.plane)
+
         # for d in game.dredges:
         #     if not d.plane:
         #         image_size = 50,50
@@ -262,7 +264,7 @@ class GameWindow(object):
                 elif e.type == MOUSEBUTTONUP:# and drag_dredge:
                     last_mouse_up = e
             if last_mouse_move:
-                self.next_message = "Moved to: {}".format(last_mouse_move.pos)
+                #self.next_message = "Moved to: {}".format(last_mouse_move.pos)
                 pass
             # if last_mouse_down:
             #     if self.city_bubble:
