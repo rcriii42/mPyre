@@ -15,10 +15,10 @@ class Player(object):
         city.owner = self
         city.set_image(self.color)
 
-    def time_step(self, game):
+    def turn_step(self, G):
         """Adjust the player to reflect moving forward in time.
 
            game is the game I am part of."""
-        ts_messages = []
+        ts_messages = ["{} turn {}".format(self.name, G.turn)]
 
         return ts_messages

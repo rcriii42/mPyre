@@ -23,4 +23,8 @@ class City(Unit):
         self.set_image()
         self.plane = None
 
+    def turn_step(self, G):
+        turn_messages=["{} turn {}".format(self.name, G.turn)]
+        return turn_messages
+
 
