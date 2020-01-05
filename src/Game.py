@@ -4,6 +4,7 @@
 import random
 from Cities import City
 from Player import Player
+from GroundUnits import Infantry
 from GraphicUtils import colors
 
 Demo = True
@@ -28,9 +29,10 @@ class Game(object):
 
         self.players = [Player()]
         self.players[0].assign_city(self.cities[0])
+        self.players[0].assign_unit(Infantry(coords=(320,320)))
 
-    # @property
-    # def units(self):
-    #     """return a list of all dredges"""
-    #     return comprehension_flatten([p.units for p in self.players])  # this returns a flat list of all units
+    @property
+    def units(self):
+        """return a list of all units"""
+        return comprehension_flatten([p.units for p in self.players])  # this returns a flat list of all units
 
