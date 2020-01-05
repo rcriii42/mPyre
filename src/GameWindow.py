@@ -91,13 +91,13 @@ class GameWindow(object):
     """
     GameWindow - Class to wrap the graphical display for the game.
     """
-    def __init__(self, width=700, height=800, timeScale=1):
+    def __init__(self, width=32*25, height=32*30, timeScale=1):
         
         self.max_frame_rate = 10    #max frame rate in frames-per-second
         self.clock = pygame.time.Clock()
         
         pygame.init()
-        self.screenSize = width, height
+        self.screenSize = width+15, height+15
         self.w32windowClass = "pygame"  #The win32 window class for this object
         self.screen = clickndrag.Display(self.screenSize) #pygame.display.set_mode(self.screenSize)
         self.windowCaption = "Pyre"
@@ -117,11 +117,11 @@ class GameWindow(object):
         
         #The main status display - Date and player $$
         self.turn_status = clickndrag.gui.Button("Turn: 1",
-                                                Rect(0, 0, 150, 15),
+                                                Rect(0, self.screenSize[1]-15, 150, 15),
                                                 self.next_turn) #callback placeholder
         self.screen.sub(self.turn_status)
         self.player_status = clickndrag.gui.Button("Player: player_1",
-                                                   Rect(150, 0, 125, 15),
+                                                   Rect(150, self.screenSize[1]-15, 125, 15),
                                                    None) #callback placeholder
         self.screen.sub(self.player_status)
         self.status_windows = {}
@@ -139,20 +139,17 @@ class GameWindow(object):
         self.game_plane.image.blit(self.game_background, (0,0)) #reset background drawing
         for c in game.cities:
             if not c.plane:
-                c.plane = clickndrag.Plane("city of %s"%c.name, Rect(c.coords,c.image_size))
+                c.plane = clickndrag.Plane("City of {}".format(c.name), Rect(c.coords, c.image_size))
                 c.plane.image.blit(c.image, (0,0))
                 self.game_plane.sub(c.plane)
 
-        # for d in game.dredges:
-        #     if not d.plane:
-        #         image_size = 50,50
-        #         d.plane = clickndrag.Plane(d.name, Rect(d.location,image_size))
-        #         d.plane.image.set_colorkey(white)
-        #         d.plane.image.fill(white)
-        #         draw_dredge(d.plane.image, d.dimensions, image_size[0])
-        #         #d.plane.image.blit(d.image, (0,0))
-        #         d.plane.draggable=True
-        #         self.game_plane.sub(d.plane)
+        for u in game.units:
+            if not u.plane:
+                u.plane = clickndrag.Plane("Unit {}".format(u.name), Rect(u.coords, u.image_size))
+                u.plane.image.blit(u.image, (0,0))
+                self.game_plane.sub(u.plane)
+                # d.plane.draggable=True
+                # self.game_plane.sub(d.plane)
                 
         self.turn_status.text = "Turn: {0:,}".format(int(game.turn))
         #self.player_status.text = "Value: {}".format(game.current_player.name)
@@ -232,15 +229,16 @@ class GameWindow(object):
                                           c.coords[1]-15),
                                           (len(c.name)*8, 15))
                         self.show_city_status(c)
-            #     for d in controller.G.dredges:
-            #         #How about a dredge?
-            #         if d.plane.rect.collidepoint(last_mouse_down.pos):
-            #             self.next_message = "clicked on dredge %s"%d.name
+                for u in controller.G.units:
+                    #How about a unit?
+                    if u.plane.rect.collidepoint(last_mouse_down.pos):
+                        self.next_message = "clicked on %s"%u.name
+                        self.show_city_status(u)
             #             if last_mouse_down.button == 1:
-            #                 drag_dredge = d
+            #                 drag_dredge = u
             #                 self.next_message = "dragging dredge %s"%d.name
-            # if drag_dredge:
-            #     if last_mouse_up:
+            # # if drag_dredge:
+            # #     if last_mouse_up:
             #         drag_dredge.destination = last_mouse_up.pos
             #         self.next_message = "Dredge %s moved to: %s"%(drag_dredge.name, drag_dredge.destination)
             #         drag_dredge = None
