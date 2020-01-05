@@ -18,19 +18,8 @@ class City(Unit):
     def __init__(self, name="anytown", coords=(0, 0)):
         self.coords = coords
         self.name = name
+        self.image_file = os.path.join('graphics', 'city_tile_32x32.png')
         self.set_image()
         self.plane = None
 
-    def set_image(self, color=None):
-        """Set the image and color"""
-        image = pygame.image.load(os.path.join('graphics', 'city_tile_32x32.png')).convert()
-        self.image_size = (32, 32)
-        self.image = pygame.transform.scale(image, self.image_size)
-        if color:
-            new_pixels = pygame.transform.threshold(self.image,
-                                                    self.image,
-                                                    colors['white'],
-                                                    threshold=(50,50,50,50),
-                                                    set_color=colors[color],
-                                                    inverse_set=True)
-            #print("City.set_image: {}".format(new_pixels))
+
