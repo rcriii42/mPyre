@@ -27,9 +27,10 @@ class City(Unit):
         self.image_size = (32, 32)
         self.image = pygame.transform.scale(image, self.image_size)
         if color:
-            self.image = pygame.transform.threshold(self.image,
+            new_pixels = pygame.transform.threshold(self.image,
                                                     self.image,
                                                     colors['white'],
-                                                    threshold=(5,5,5,5),
+                                                    threshold=(50,50,50,50),
                                                     set_color=colors[color],
                                                     inverse_set=True)
+            #print("City.set_image: {}".format(new_pixels))
