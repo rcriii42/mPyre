@@ -27,5 +27,7 @@ class Player(object):
 
            game is the game I am part of."""
         ts_messages = ["{} turn {}".format(self.name, G.turn)]
+        for u in self.units:
+            ts_messages.extend(u.turn_step(G))
 
         return ts_messages
