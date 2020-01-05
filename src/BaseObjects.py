@@ -13,6 +13,7 @@ class Unit(object):
     def __init__(self, coords=(0,0)):
         self.coords = coords
         self.image_file = os.path.join('graphics', 'city_tile_32x32.png')
+        self.move_speed = 0
 
     def set_image(self, color=None):
         """Set the image and color"""
