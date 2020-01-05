@@ -16,7 +16,7 @@ class City(Unit):
     """
 
     def __init__(self, name="anytown", coords=(0, 0)):
-        self.coords = coords
+        Unit.__init__(self, coords)
         self.name = name
         self.owner = None
         self.image_file = os.path.join('graphics', 'city_tile_32x32.png')
