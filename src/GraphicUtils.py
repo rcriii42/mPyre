@@ -3,6 +3,11 @@
 import pygame , random , sys , math , time , pickle, os
 from pygame.locals import *
 
+colors = {'green': (51, 255, 0),
+          'blue':( 0, 0, 255),
+          'red': (204, 0, 0 ),
+          'white':(255, 255, 255)}
+
 def tile_texture(output, img, rect=None):
     """tile_texture - fill a surface with a tile"""
     cr = output.get_clip()
