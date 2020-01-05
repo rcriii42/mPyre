@@ -1,6 +1,7 @@
 import pygame, os
 from pygame.locals import Rect
 from pygame.locals import QUIT, MOUSEMOTION, MOUSEBUTTONDOWN, MOUSEBUTTONUP
+from pygame.locals import KEYDOWN, K_UP, K_DOWN, K_LEFT, K_RIGHT
 from GraphicUtils import tile_texture
 import clickndrag
 import clickndrag.gui
@@ -124,7 +125,9 @@ class GameWindow(object):
                                                    Rect(150, self.screenSize[1]-15, 125, 15),
                                                    None) #callback placeholder
         self.screen.sub(self.player_status)
-        self.status_windows = {}
+
+        self.status_window = None
+        self.selected = None
         
         self.city_bubble = None
 
@@ -160,8 +163,8 @@ class GameWindow(object):
         return True
     
     def show_city_status(self, c):
-        if c in self.status_windows:
-            self.status_windows[c].destroy()
+        if self.status_window:
+            self.status_window.destroy()
         city_status = CityStatus(c.name, c)
 
         #place city status where it will not lap off the edge of the screen, starting in top left
@@ -174,8 +177,8 @@ class GameWindow(object):
         else:
             city_status.rect.topright = c.plane.rect.bottomleft
         self.game_plane.sub(city_status)
-        self.status_windows[c] = city_status
-        
+        self.status_window = city_status
+
     def post_quit(self):
         q = pygame.event.Event(pygame.QUIT)
         pygame.event.post(q)
@@ -204,6 +207,7 @@ class GameWindow(object):
             last_mouse_move = None
             last_mouse_down = None
             last_mouse_up = None
+            last_key_down = None
             for e in event_list:
                 if e.type == QUIT:
                     controller.quit()
@@ -213,10 +217,15 @@ class GameWindow(object):
                     last_mouse_down = e
                 elif e.type == MOUSEBUTTONUP:# and drag_dredge:
                     last_mouse_up = e
+                elif e.type == KEYDOWN:
+                    last_key_down = e
             if last_mouse_move:
                 #self.next_message = "Moved to: {}".format(last_mouse_move.pos)
                 pass
             if last_mouse_down:
+                self.selected = None
+                if self.status_window:
+                    self.status_window.destroy()
                 if self.city_bubble:
                     self.city_bubble.destroy()
                     self.city_bubble = None
@@ -229,14 +238,20 @@ class GameWindow(object):
                                           c.coords[1]-15),
                                           (len(c.name)*8, 15))
                         self.show_city_status(c)
+                        self.selected = c
                 for u in controller.G.units:
                     #How about a unit?
                     if u.plane.rect.collidepoint(last_mouse_down.pos):
                         self.next_message = "clicked on %s"%u.name
                         self.show_city_status(u)
+                        self.selected = u
             #             if last_mouse_down.button == 1:
             #                 drag_dredge = u
             #                 self.next_message = "dragging dredge %s"%d.name
+
+            if last_key_down and self.selected.move_speed>0:
+                self.selected.move(last_key_down.key)
+
             # # if drag_dredge:
             # #     if last_mouse_up:
             #         drag_dredge.destination = last_mouse_up.pos
