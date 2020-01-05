@@ -43,5 +43,6 @@ class Infantry(Unit):
         return True
 
     def turn_step(self, G):
-        turn_messages = ["{} turn {}".format(self.name, G.turn)]
+        turn_messages = ["{} turn {} moved {}".format(self.name, G.turn, self.moved)]
+        self.moved = 0
         return turn_messages
