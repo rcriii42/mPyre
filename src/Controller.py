@@ -27,11 +27,10 @@ class World(object):
             step_messages.append("Turn: {0:,}".format(int(self.G.turn)))
             # Run World Value / Progress Calcs
             for mycity in self.G.cities:
-                #note that the cities update their projects
                 step_messages.extend(mycity.turn_step(self.G))
 
             for myplayer in self.G.players:
-                #Note that players update their dredges
+                #Note that players update their units
                 step_messages.extend(myplayer.turn_step(self.G))
 
         # Record world for history I'm sure this will be interesting later 
