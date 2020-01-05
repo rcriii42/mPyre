@@ -3,7 +3,8 @@
 
 import random
 from Cities import City
-#from Player import Player
+from Player import Player
+from GraphicUtils import colors
 
 Demo = True
 
@@ -24,8 +25,9 @@ class Game(object):
                            City("Jacksonville", (15, 750)),
                            ]
         self.cities = random.sample(possible_cities, 3)
-        #
-        self.players = [] #[Player()]
+
+        self.players = [Player()]
+        self.players[0].assign_city(self.cities[0])
 
     # @property
     # def units(self):
