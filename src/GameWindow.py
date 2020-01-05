@@ -162,8 +162,7 @@ class GameWindow(object):
         pygame.display.flip()
         return True
     
-    def build_city_status(self, bubble):
-        c = bubble.city
+    def show_city_status(self, c):
         if c in self.status_windows:
             self.status_windows[c].destroy()
         city_status = CityStatus(c.name, c)
@@ -229,14 +228,10 @@ class GameWindow(object):
                     #did we click on a city?
                     if c.plane.rect.collidepoint(last_mouse_down.pos):
                         self.next_message =  "clicked on city of %s"%c.name
-                        bubble_loc = Rect((c.coords[0]+c.image_size[0],
+                        city_loc = Rect((c.coords[0]+c.image_size[0],
                                           c.coords[1]-15),
                                           (len(c.name)*8, 15))
-                        self.city_bubble = clickndrag.gui.Button(c.name,
-                                                                 bubble_loc,
-                                                                 self.build_city_status)
-                        self.city_bubble.city = c
-                        self.game_plane.sub(self.city_bubble)
+                        self.show_city_status(c)
             #     for d in controller.G.dredges:
             #         #How about a dredge?
             #         if d.plane.rect.collidepoint(last_mouse_down.pos):
