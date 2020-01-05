@@ -54,81 +54,37 @@ class CityStatus(clickndrag.gui.Container):
     def __init__(self, name, city, padding = 0, background_color = None):
         """
         initialize.  Initialized with a name, destroy button in upper right, and
-        four lines per project in the city.
+        basic city information.
         """
         clickndrag.gui.Container.__init__(self, name, padding, background_color)
         self.city = city
-
-        city_data_strs = {'city_name':city.name}
+        if city.owner:
+            owner_name = city.owner.name
+        else:
+            owner_name = 'Neutral'
+        city_data_strs = [('city_name', city.name),
+                          ('city owner', owner_name)]
         self.num_proj=-1
-        # for p in city.projects:
-        #     self.num_proj += 1
-        #     city_data_strnames.extend(['name_%d'%self.num_proj,
-        #                                'size_%d'%self.num_proj,
-        #                                'value_%d'%self.num_proj,
-        #                                'dredges_%d'%self.num_proj])
-        #     city_data_strs['name_%d'%self.num_proj]="%s"%p.name
-        #     city_data_strs['size_%d'%self.num_proj]="  Size: %0.0f"%p.quantity
-        #     city_data_strs['value_%d'%self.num_proj]="  Value: $%0.0f"%p.total_value
-        #     city_data_strs['dredges_%d'%self.num_proj]="  Dredges: %i %% Done: %.1f"%(len(p.dredges),p.progress()*100)
-        name_length = max([len(city_data_strs[s]) for s in city_data_strs])*char_width+char_width
-        name_label=clickndrag.gui.Label('city_name',
-                                        city.name,
-                                        Rect(0, 0, name_length, 15),
-                                        background_color=teal)
-        self.sub(name_label)
+
+        name_length = max([len(s[1]) for s in city_data_strs])*char_width+char_width
+        for s in city_data_strs:
+            name_label=clickndrag.gui.Label(s[0],
+                                            s[1],
+                                            Rect(0, 0, name_length, 15),
+                                            background_color=teal)
+            self.sub(name_label)
+
         destroy_button = clickndrag.gui.Button('X',
                                                Rect(name_label.rect.width-char_width, 0, char_width, 15),
                                                lambda x: x.parent.parent.destroy(),
                                                background_color=teal)
         name_label.sub(destroy_button)
-        # n=-1
-        # for p in city.projects:
-        #     n += 1
-        #     self.add_project_display(p, n)
 
-    # def add_project_display(self, p, pID):
-    #     """Add a new project"""
-    #     city_data_strnames = ['name_%d'%pID,'size_%d'%pID,'value_%d'%pID,'dredges_%d'%pID]
-    #     city_data_strs = {}
-    #     city_data_strs['name_%d'%pID]="%s"%p.name
-    #     city_data_strs['size_%d'%pID]="  Size: %0.0f"%p.quantity
-    #     city_data_strs['value_%d'%pID]="  Value: $%0.0f"%p.total_value
-    #     city_data_strs['dredges_%d'%pID]="  Dredges: %i %% Done: %.1f"%(len(p.dredges),p.progress()*100)
-    #     self.project_status[p] = []
-    #     str_len = max([len(city_data_strs[s]) for s in city_data_strs])*char_width
-    #     for s in city_data_strnames:
-    #         if 'name' in s:
-    #             color = buff
-    #         else:
-    #             color = None
-    #         L = clickndrag.gui.Label(s,
-    #                                  city_data_strs[s],
-    #                                  Rect(0, 0, str_len, 15),
-    #                                  background_color = color)
-    #         self.sub(L)
-    #         self.project_status[p].append(L)
 
     def update(self):
         """
-        Update the labels for each project, then call base class update.
+        Update the labels for the city.
         """
-        # for p in self.project_status:
-        #     if p not in self.city.projects:
-        #         #this project has disappeared, remove and destroy the labels
-        #         for x in self.project_status[p]:
-        #             self.project_status[p].remove(x)
-        #             x.destroy()
-        # for p in self.city.projects:
-        #     if p not in self.project_status:
-        #         #this is a new project, add it
-        #         self.num_proj += 1
-        #         self.add_project_display(p, self.num_proj)
-        #     self.project_status[p][0].text = "%s"%p.name
-        #     self.project_status[p][1].text = "  Size: %0.0f"%p.quantity
-        #     self.project_status[p][2].text = "  Value: $%0.0f"%p.total_value
-        #     self.project_status[p][3].text = "  Dredges: %i %% Done: %.1f"%(len(p.dredges),p.progress()*100)
-
         clickndrag.gui.Container.update(self)
 
 class GameWindow(object):
