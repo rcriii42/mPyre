@@ -23,7 +23,7 @@ class Game(object):
         possible_cities = [City("Boston", (17*32, 32)),
                            City("New York", (13*32, 4*32)),
                            City("Norfolk", (9*32, 11*32)),
-                           City("Jacksonville", (32, 25*32)),
+                           City("Jacksonville", (32, 20*32)),
                            ]
         self.cities = random.sample(possible_cities, 3)
 
