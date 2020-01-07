@@ -39,7 +39,7 @@ class Infantry(Unit):
         if not self.check_collision(new_coords, G):
             self.coords = new_coords
             self.plane.rect.move_ip(move_vector)
-        self.moved += 1
+            self.moved += 1
         return True
 
     def turn_step(self, G):
