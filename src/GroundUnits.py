@@ -4,7 +4,6 @@ from BaseObjects import Unit
 from GraphicUtils import colors
 from pygame.locals import K_UP, K_DOWN, K_LEFT, K_RIGHT
 
-
 class Infantry(Unit):
     """The basic ground unit"""
 
@@ -19,7 +18,7 @@ class Infantry(Unit):
         self.moved = 0
         self.move_speed = 1
 
-    def move(self, direction):
+    def move(self, direction, G):
         "Move one step in the given direction"
 
         if self.moved >= self.move_speed:
@@ -28,17 +27,18 @@ class Infantry(Unit):
             return False
         print("{} moving {}, moved {}".format(self.name, self.move_speed, self.moved))
         if direction == K_UP:
-            self.coords = (self.coords[0], self.coords[1] - self.image_size[1])
-            self.plane.rect.move_ip(0, -self.image_size[1])
+            move_vector = 0, -self.image_size[1]
         elif direction == K_DOWN:
-            self.coords = (self.coords[0], self.coords[1] + self.image_size[1])
-            self.plane.rect.move_ip(0, self.image_size[1])
+            move_vector = 0, self.image_size[1]
         elif direction == K_RIGHT:
-            self.coords = (self.coords[0] + self.image_size[0], self.coords[1])
-            self.plane.rect.move_ip(self.image_size[0], 0)
+            move_vector = self.image_size[1], 0
         elif direction == K_LEFT:
-            self.coords = (self.coords[0] - self.image_size[0], self.coords[1])
-            self.plane.rect.move_ip(- self.image_size[0], 0)
+            move_vector = -self.image_size[1], 0
+        new_coords = (self.coords[0]+ move_vector[0],
+                      self.coords[1] + move_vector[1])
+        if not self.check_collision(new_coords, G):
+            self.coords = new_coords
+            self.plane.rect.move_ip(move_vector)
         self.moved += 1
         return True
 
