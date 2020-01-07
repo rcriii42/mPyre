@@ -250,7 +250,7 @@ class GameWindow(object):
             #                 self.next_message = "dragging dredge %s"%d.name
 
             if last_key_down and self.selected.move_speed>0:
-                self.selected.move(last_key_down.key)
+                self.selected.move(last_key_down.key, controller.G)
 
             # # if drag_dredge:
             # #     if last_mouse_up:
