@@ -29,6 +29,23 @@ class Unit(object):
                                                     inverse_set=True)
             #print("City.set_image: {}".format(new_pixels))
 
+    def check_collision(self, coords, G):
+        """Check to see if the unit will collide with any units or cities in the game
+        G is the game object
+        should be called with the new coords before moving!"""
+        if not coords:
+            coords = self.coords
+        for c in G.cities:
+            if c.coords == coords:
+                print("check_collision: collided with {}".format(c.name))
+                return c
+        for u in G.units:
+            if u.coords == coords:
+                "check_collision: collided with {}".format(u.name)
+                return u
+        print("check_collision: No collision")
+        return False
+
 
 class Map(object):
     """Map - meta object"""
