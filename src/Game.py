@@ -23,15 +23,20 @@ class Game(object):
         possible_cities = [City("Boston", (17*32, 32)),
                            City("New York", (13*32, 4*32)),
                            City("Norfolk", (9*32, 11*32)),
-                           City("Jacksonville", (32, 20*32)),
+                           City("Jacksonville", (32, 19*32)),
                            ]
         self.cities = random.sample(possible_cities, 3)
+        print([c.name for c in self.cities])
+
+        self.neutral = Player(name="Neutral", color = "white")
+        for c in self.cities:
+            self.neutral.assign_city(c)
 
         self.players = [Player(), Player(name="Blue", color='blue')]
         self.players[0].assign_city(self.cities[0])
         self.players[0].assign_unit(Infantry(coords=(320,320)))
         self.players[1].assign_city(self.cities[2])
-        self.players[1].assign_unit(Infantry(name="42nd grenadiers", coords=(18*32, 3*32)))
+        self.players[1].assign_unit(Infantry(name="42nd grenadiers", coords=(18*32, 2*32)))
 
     @property
     def units(self):
