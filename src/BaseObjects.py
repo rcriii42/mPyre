@@ -15,6 +15,11 @@ class Unit(object):
         self.image_file = os.path.join('graphics', 'city_tile_32x32.png')
         self.move_speed = 0
 
+        self.max_strength = 1
+        self.current_strength = 1 #How much damage the unit can take
+        self.attack = 0 #Attack Strength and damage dealt
+        self.defense = 1 #Defense strength, successful defense always does 1 damage
+
     def set_image(self, color=None):
         """Set the image and color"""
         image = pygame.image.load(self.image_file).convert()
@@ -44,7 +49,7 @@ class Unit(object):
                 "check_collision: collided with {}".format(u.name)
                 return u
         print("check_collision: No collision")
-        return False
+        return None
 
 
 class Map(object):
