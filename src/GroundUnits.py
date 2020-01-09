@@ -18,13 +18,18 @@ class Infantry(Unit):
         self.moved = 0
         self.move_speed = 1
 
+        self.max_strength = 1
+        self.current_strength = 1  # How much damage the unit can take
+        self.attack = 1  # Attack Strength and damage dealt
+        self.defense = 1  # Defense strength, successful defense always does 1 damage
+
     def move(self, direction, G):
         "Move one step in the given direction"
 
         if self.moved >= self.move_speed:
             print("{} not moving {}, moved {}".format(self.name, self.move_speed, self.moved))
             print("{}".format((self.moved < self.move_speed)))
-            return False
+            return None
         print("{} moving {}, moved {}".format(self.name, self.move_speed, self.moved))
         if direction == K_UP:
             move_vector = 0, -self.image_size[1]
@@ -36,11 +41,14 @@ class Infantry(Unit):
             move_vector = -self.image_size[1], 0
         new_coords = (self.coords[0]+ move_vector[0],
                       self.coords[1] + move_vector[1])
-        if not self.check_collision(new_coords, G):
+        u = self.check_collision(new_coords, G)
+        if not u:
             self.coords = new_coords
             self.plane.rect.move_ip(move_vector)
             self.moved += 1
-        return True
+            return None
+        else:
+            return u
 
     def turn_step(self, G):
         turn_messages = ["{} turn {} moved {}".format(self.name, G.turn, self.moved)]
