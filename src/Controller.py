@@ -36,3 +36,42 @@ class World(object):
         # Record world for history I'm sure this will be interesting later 
         self.history[self.G.turn]=step_messages
         return step_messages
+
+    def move_unit(self, moving_unit, key):
+        """Move the given unit if possible"""
+        if moving_unit.move_speed > 0:
+            target_unit = moving_unit.move(key, self.G)
+            if target_unit:
+                if target_unit.owner is not moving_unit.owner: #Attack!
+                    return self.resolve_combat(moving_unit, target_unit)
+            else:
+                return moving_unit
+
+    def resolve_combat(self, attacker, defender):
+        """Resolve an attack by one unit on another"""
+        result = random.random()*(attacker.attack+defender.defense)
+        if result < attacker.attack: #Attacker won
+            defender.current_strength -= attacker.attack
+            if defender.current_strength <= 0:
+                if defender in defender.owner.cities:
+                    #A city changes hands
+                    print("resolve_combat: {} captured city of {}".format(attacker.name, defender.name))
+                    attacker.owner.assign_city(defender)
+                    defender.owner.cities.remove(defender)
+                    defender.plane.destroy()
+                    defender.plane = None
+                else:
+                    #A unit is destroyed
+                    print("resolve_combat: {} defeated {}".format(attacker.name, defender.name))
+                    defender.owner.units.remove(defender)
+                    defender.plane.destroy()
+                    attacker.plane.rect.move(defender.coords)
+            return attacker
+        else: #Defender won
+            attacker.current_strength -= defender.defense
+            if attacker.current_strength <= 0:
+                #Attacker destroyed
+                print("resolve_combat: {} defeated by {}".format(attacker.name, defender.name))
+                attacker.owner.units.remove(attacker)
+                attacker.plane.destroy()
+            return None
