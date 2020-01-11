@@ -5,6 +5,7 @@ from pygame.locals import KEYDOWN, K_UP, K_DOWN, K_LEFT, K_RIGHT
 from GraphicUtils import tile_texture
 import clickndrag
 import clickndrag.gui
+from GraphicUtils import colors
 
 char_width = 10
 
@@ -153,7 +154,7 @@ class GameWindow(object):
                 self.game_plane.sub(u.plane)
                 # d.plane.draggable=True
                 # self.game_plane.sub(d.plane)
-                
+        self.turn_status.current_color = colors[game.current_player.color]
         self.turn_status.text = "Turn: {0:,}".format(int(game.turn))
         #self.player_status.text = "Value: {}".format(game.current_player.name)
         self.screen.update()
