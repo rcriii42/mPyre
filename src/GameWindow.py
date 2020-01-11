@@ -154,9 +154,10 @@ class GameWindow(object):
                 self.game_plane.sub(u.plane)
                 # d.plane.draggable=True
                 # self.game_plane.sub(d.plane)
-        self.turn_status.current_color = colors[game.current_player.color]
+
         self.turn_status.text = "Turn: {0:,}".format(int(game.turn))
-        #self.player_status.text = "Value: {}".format(game.current_player.name)
+        self.player_status.current_color = colors[game.current_player.color]
+        self.player_status.text = "{}".format(game.current_player.name)
         self.screen.update()
         self.screen.render()
         
