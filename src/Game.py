@@ -34,12 +34,32 @@ class Game(object):
 
         self.players = [Player(), Player(name="Blue", color='blue')]
         self.players[0].assign_city(self.cities[0])
-        self.players[0].assign_unit(Infantry(coords=(320,320)))
+        self.players[0].assign_unit(Infantry(coords=(self.cities[2].coords[0]+32,
+                                                     self.cities[2].coords[1])))
         self.players[1].assign_city(self.cities[2])
-        self.players[1].assign_unit(Infantry(name="42nd grenadiers", coords=(18*32, 2*32)))
+        self.players[1].assign_unit(Infantry(name="42nd grenadiers",
+                                             coords=(self.cities[0].coords[0]+32,
+                                                     self.cities[0].coords[1])))
+        self.player_turn_list = self.players.copy()
 
     @property
     def units(self):
         """return a list of all units"""
         return comprehension_flatten([p.units for p in self.players])  # this returns a flat list of all units
 
+    @property
+    def current_player(self):
+        """The player whose turn it is"""
+        return self.player_turn_list[0]\
+
+    @property
+    def next_player(self, advance="True"):
+        """The next player in turn"""
+        if len(self.player_turn_list) == 1:
+            return None
+        else:
+            if advance:
+                self.player_turn_list.pop(0)
+                return self.player_turn_list[0]
+            else:
+                return self.player_turn_list[1]
