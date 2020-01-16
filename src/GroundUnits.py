@@ -3,13 +3,43 @@ import os
 from BaseObjects import Unit
 from GraphicUtils import colors
 from pygame.locals import K_UP, K_DOWN, K_LEFT, K_RIGHT
+import random
+
+class unit_namer:
+    """class to manage unit names"""
+    def __init__(self):
+        self.unit_num = 1
+
+    def name_unit(self):
+        if self.unit_num in [1]:
+            suffix = "st"
+        elif self.unit_num in [2]:
+            suffix = "nd"
+        elif self.unit_num in [3]:
+            suffix = "rd"
+        else:
+            suffix = "th"
+        name = "{}{} {}".format(self.unit_num,
+                                suffix,
+                                random.choice(["Infantry",
+                                               "Grenadiers",
+                                               "Halbardiers",
+                                               "Guards",
+                                               "Marines"]))
+        self.unit_num += 1
+        return name
+
+namer = unit_namer()
 
 class Infantry(Unit):
     """The basic ground unit"""
 
-    def __init__(self, name="1st Infantry", coords=(0, 0)):
+    def __init__(self, name=None, coords=(0, 0)):
         self.coords = coords
-        self.name = name
+        if name:
+            self.name = name
+        else:
+            self.name = namer.name_unit()
         self.owner = None
         self.image_file = os.path.join('graphics', 'inf_icon_32x32.png')
         self.set_image()
@@ -22,6 +52,8 @@ class Infantry(Unit):
         self.current_strength = 1  # How much damage the unit can take
         self.attack = 1  # Attack Strength and damage dealt
         self.defense = 1  # Defense strength, successful defense always does 1 damage
+
+        self.build_time = 2
 
     def move(self, direction, G):
         "Move one step in the given direction"
