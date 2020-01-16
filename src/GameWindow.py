@@ -244,9 +244,12 @@ class GameWindow(object):
                 for u in controller.G.units:
                     #How about a unit?
                     if u.plane.rect.collidepoint(last_mouse_down.pos):
-                        self.next_message = "clicked on %s"%u.name
-                        self.show_city_status(u)
-                        self.selected = u
+                        if u.owner is controller.G.current_player:
+                            self.next_message = "selected {}".format(u.name)
+                            self.show_city_status(u)
+                            self.selected = u
+                        else:
+                            self.next_message = "could not select {}".format(u.name)
             #             if last_mouse_down.button == 1:
             #                 drag_dredge = u
             #                 self.next_message = "dragging dredge %s"%d.name
