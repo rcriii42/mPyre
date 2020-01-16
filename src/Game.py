@@ -50,16 +50,24 @@ class Game(object):
     @property
     def current_player(self):
         """The player whose turn it is"""
-        return self.player_turn_list[0]\
+        return self.player_turn_list[0]
 
     @property
-    def next_player(self, advance="True"):
+    def next_player(self):
         """The next player in turn"""
         if len(self.player_turn_list) == 1:
             return None
         else:
-            if advance:
-                self.player_turn_list.pop(0)
-                return self.player_turn_list[0]
-            else:
-                return self.player_turn_list[1]
+            return self.player_turn_list[1]
+
+    def advance_player(self):
+        if len(self.player_turn_list) == 1:
+            return False
+        else:
+            self.player_turn_list.pop(0)
+            return self.current_player
+
+    def advance_turn(self):
+        """advance the turn and reset players"""
+        self.turn += 1
+        self.player_turn_list = self.players.copy()
