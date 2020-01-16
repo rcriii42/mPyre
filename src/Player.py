@@ -15,6 +15,7 @@ class Player(object):
         self.cities.append(city)
         city.owner = self
         city.set_image(self.color)
+        city.start_building()
 
     def assign_unit(self, unit):
         """assign a unit to the player"""

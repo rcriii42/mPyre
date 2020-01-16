@@ -24,8 +24,6 @@ class City(Unit):
         self.set_image()
         self.plane = None
 
-        self.start_building()
-
     def turn_step(self, G):
         turn_messages=["{} turn {}".format(self.name, G.turn)]
         self.time_to_build -= 1
