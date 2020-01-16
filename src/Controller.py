@@ -22,16 +22,22 @@ class World(object):
         """
         step_messages = []
         if move_type[0] == 'end_turn':
-            print('Advancing turn to {}'.format(self.G.turn+1))
-            self.G.turn += 1
-            step_messages.append("Turn: {0:,}".format(int(self.G.turn)))
-            # Run World Value / Progress Calcs
-            for mycity in self.G.cities:
-                step_messages.extend(mycity.turn_step(self.G))
+            if self.G.next_player is None:
+                print('Advancing turn to {}'.format(self.G.turn+1))
+                self.G.advance_turn()
+                step_messages.append("Turn: {0:,}".format(int(self.G.turn)))
+                # Run World Value / Progress Calcs
+                for mycity in self.G.cities:
+                    step_messages.extend(mycity.turn_step(self.G))
 
-            for myplayer in self.G.players:
-                #Note that players update their units
-                step_messages.extend(myplayer.turn_step(self.G))
+                for myplayer in self.G.players:
+                    #Note that players update their units
+                    step_messages.extend(myplayer.turn_step(self.G))
+
+            else:
+                print("{} turn ends, {} turn starts".format(self.G.current_player.name,
+                                                            self.G.next_player.name))
+                self.G.advance_player()
 
         # Record world for history I'm sure this will be interesting later 
         self.history[self.G.turn]=step_messages
