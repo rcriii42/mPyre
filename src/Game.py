@@ -30,7 +30,7 @@ class Game(object):
 
         self.neutral = Player(name="Neutral", color = "white")
         for c in self.cities:
-            self.neutral.assign_city(c)
+            self.neutral.assign_city(c, build_unit=False)
 
         self.players = [Player(), Player(name="Blue", color='blue')]
         self.players[0].assign_city(self.cities[0])

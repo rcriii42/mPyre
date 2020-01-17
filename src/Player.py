@@ -10,12 +10,13 @@ class Player(object):
         self.units = []
         self.color = color
 
-    def assign_city(self, city):
+    def assign_city(self, city, build_unit=True):
         """assign a city to the player"""
         self.cities.append(city)
         city.owner = self
         city.set_image(self.color)
-        city.start_building()
+        if build_unit:
+            city.start_building()
 
     def assign_unit(self, unit):
         """assign a unit to the player"""
