@@ -10,6 +10,8 @@ import GroundUnits
 
 city_tile_path = os.path.join('graphics', 'city_tile_32x32.png')
 
+not_building = Unit()
+not_building.name = "none"
 
 class City(Unit):
     """
@@ -23,6 +25,9 @@ class City(Unit):
         self.image_file = os.path.join('graphics', 'city_tile_32x32.png')
         self.set_image()
         self.plane = None
+
+        self.building = not_building
+        self.time_to_build = 0
 
     def turn_step(self, G):
         turn_messages=["{} turn {}".format(self.name, G.turn)]
