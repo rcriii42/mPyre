@@ -157,6 +157,9 @@ class GameWindow(object):
                 # d.plane.draggable=True
                 # self.game_plane.sub(d.plane)
 
+        if not self.selected and self.status_window:
+            self.status_window.destroy()
+            self.status_window = None
         self.turn_status.text = "Turn: {0:,}".format(int(game.turn))
         self.player_status.current_color = colors[game.current_player.color]
         self.player_status.text = "{}".format(game.current_player.name)
