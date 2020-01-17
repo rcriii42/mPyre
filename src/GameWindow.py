@@ -6,6 +6,7 @@ from GraphicUtils import tile_texture
 import clickndrag
 import clickndrag.gui
 from GraphicUtils import colors
+import GroundUnits, Cities
 
 char_width = 10
 
@@ -53,7 +54,7 @@ class CityStatus(clickndrag.gui.Container):
     """
     CityStatus - Class to wrap a status window for a city that updates each turn
     """
-    def __init__(self, name, city, padding = 0, background_color = None):
+    def __init__(self, name, city, msgs=[] ,padding = 0, background_color = None):
         """
         initialize.  Initialized with a name, destroy button in upper right, and
         basic city information.
@@ -66,6 +67,7 @@ class CityStatus(clickndrag.gui.Container):
             owner_name = 'Neutral'
         city_data_strs = [('city_name', city.name),
                           ('city owner', owner_name)]
+        city_data_strs.extend(msgs)
         self.num_proj=-1
 
         name_length = max([len(s[1]) for s in city_data_strs])*char_width+char_width
@@ -167,7 +169,16 @@ class GameWindow(object):
     def show_city_status(self, c):
         if self.status_window:
             self.status_window.destroy()
-        city_status = CityStatus(c.name, c)
+        if isinstance(c, Cities.City):
+            if c.building.name == 'none':
+                msgs = [('building', c.building.name)]
+            else:
+                msgs = [('building', c.building.name),
+                        ('finished', '{:d} turns'.format(c.time_to_build))]
+        else: #assume the unit is a combat unit
+            msgs = [('strength', 'Strength: {}'.format(c.current_strength)),
+                    ('moves_left:', 'Moves: {}'.format(c.move_speed - c.moved))]
+        city_status = CityStatus(c.name, c, msgs)
 
         #place city status where it will not lap off the edge of the screen, starting in top left
         if c.plane.rect.left-city_status.rect.width>self.game_plane.rect.left and c.plane.rect.top-city_status.rect.height>self.game_plane.rect.top:
