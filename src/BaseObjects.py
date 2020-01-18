@@ -13,7 +13,9 @@ class Unit(object):
     def __init__(self, coords=(0,0)):
         self.coords = coords
         self.image_file = os.path.join('graphics', 'city_tile_32x32.png')
+
         self.move_speed = 0
+        self.moved = 0
 
         self.max_strength = 1
         self.current_strength = 1 #How much damage the unit can take
