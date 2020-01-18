@@ -147,7 +147,16 @@ class GameWindow(object):
 
     @selected.setter
     def selected(self, s):
+        if self._selected:
+            self._selected.plane.remove("outlined_selection")
+            self._selected.plane.render()
         self._selected = s
+        if s:
+            img = s.plane.image.copy()
+            pygame.draw.rect(img, red, [0, 0, 31, 31], 3)
+            outlined = clickndrag.Plane("outlined_selection", Rect([0, 0, 31, 31]))
+            outlined.image.blit(img, (0,0))
+            s.plane.sub(outlined)
 
     def update(self, game):
         """update - update the game window"""
@@ -264,7 +273,7 @@ class GameWindow(object):
                                           (len(c.name)*8, 15))
                         self.show_city_status(c)
                         self.selected = c
-                        self.outline_selected()
+
                 for u in controller.G.units:
                     #How about a unit?
                     if u.plane.rect.collidepoint(last_mouse_down.pos):
