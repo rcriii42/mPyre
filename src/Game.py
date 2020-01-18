@@ -33,12 +33,14 @@ class Game(object):
             self.neutral.assign_city(c, build_unit=False)
 
         self.players = [Player(), Player(name="Blue", color='blue')]
-        self.players[0].assign_city(self.cities[0])
-        self.players[0].assign_unit(Infantry(coords=(self.cities[2].coords[0]+32,
+        self.players[0].assign_unit(Infantry(coords=(self.cities[2].coords[0] + 32,
                                                      self.cities[2].coords[1])))
-        self.players[1].assign_city(self.cities[2])
-        self.players[1].assign_unit(Infantry(coords=(self.cities[0].coords[0]+32,
+        self.players[1].assign_unit(Infantry(coords=(self.cities[0].coords[0] + 32,
                                                      self.cities[0].coords[1])))
+
+        self.players[0].assign_city(self.cities[0])
+        self.players[1].assign_city(self.cities[2])
+
         self.player_turn_list = self.players.copy()
 
     @property
