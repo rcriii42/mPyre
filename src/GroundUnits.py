@@ -3,6 +3,7 @@ import os
 from BaseObjects import Unit
 from GraphicUtils import colors
 from pygame.locals import K_UP, K_DOWN, K_LEFT, K_RIGHT
+from pygame.locals import K_KP1, K_KP2, K_KP3, K_KP4, K_KP6, K_KP7, K_KP8, K_KP9
 import random
 
 class unit_namer:
@@ -63,14 +64,22 @@ class Infantry(Unit):
             print("{}".format((self.moved < self.move_speed)))
             return None
         print("{} moving {}, moved {}".format(self.name, self.move_speed, self.moved))
-        if direction == K_UP:
+        if direction in [K_UP, K_KP8]:
             move_vector = 0, -self.image_size[1]
-        elif direction == K_DOWN:
+        elif direction in [K_KP9]:
+            move_vector = self.image_size[0], -self.image_size[1]
+        elif direction in [K_RIGHT, K_KP6]:
+            move_vector = self.image_size[0], 0
+        elif direction in [K_KP3]:
+            move_vector = self.image_size[0], self.image_size[1]
+        elif direction in [K_DOWN, K_KP2]:
             move_vector = 0, self.image_size[1]
-        elif direction == K_RIGHT:
-            move_vector = self.image_size[1], 0
-        elif direction == K_LEFT:
-            move_vector = -self.image_size[1], 0
+        elif direction in [K_KP1]:
+            move_vector = -self.image_size[0], self.image_size[1]
+        elif direction in [K_LEFT, K_KP4]:
+            move_vector = -self.image_size[0], 0
+        elif direction in [K_KP7]:
+            move_vector = -self.image_size[0], -self.image_size[1]
         else:
             return None
         new_coords = (self.coords[0]+ move_vector[0],
