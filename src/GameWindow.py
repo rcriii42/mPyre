@@ -192,10 +192,10 @@ class GameWindow(object):
             self.status_window.destroy()
         if isinstance(c, Cities.City):
             if c.building.name == 'none':
-                msgs = [('building', c.building.name)]
+                msgs = [('building', "Building: {}".format(c.building.name))]
             else:
-                msgs = [('building', c.building.name),
-                        ('finished', '{:d} turns'.format(c.time_to_build))]
+                msgs = [('building', "Building: {}".format(c.building.name)),
+                        ('finished', '{:d} turns left'.format(c.time_to_build))]
         else: #assume the unit is a combat unit
             msgs = [('strength', 'Strength: {}'.format(c.current_strength)),
                     ('moves_left:', 'Moves: {}'.format(c.move_speed - c.moved))]
