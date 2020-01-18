@@ -52,6 +52,8 @@ class World(object):
                     return self.resolve_combat(moving_unit, target_unit)
             else:
                 return moving_unit
+        else:
+            return None
 
     def resolve_combat(self, attacker, defender):
         """Resolve an attack by one unit on another"""
