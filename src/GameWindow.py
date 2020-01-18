@@ -130,7 +130,7 @@ class GameWindow(object):
         self.screen.sub(self.player_status)
 
         self.status_window = None
-        self.selected = None
+        self._selected = None
         
         self.city_bubble = None
 
@@ -139,6 +139,15 @@ class GameWindow(object):
         print(self)
 
         pygame.display.flip()
+
+    @property
+    def selected(self):
+        """The selected object"""
+        return self._selected
+
+    @selected.setter
+    def selected(self, s):
+        self._selected = s
 
     def update(self, game):
         """update - update the game window"""
@@ -205,7 +214,7 @@ class GameWindow(object):
     def next_turn(self, object=None):
         """The user wishes to end the turn"""
         self.advance_turn = True
-    
+
     def mainloop(self, controller):
         """The mainloop for the game, expects a controller to manage the game objects"""
         drag_dredge = False
@@ -255,6 +264,7 @@ class GameWindow(object):
                                           (len(c.name)*8, 15))
                         self.show_city_status(c)
                         self.selected = c
+                        self.outline_selected()
                 for u in controller.G.units:
                     #How about a unit?
                     if u.plane.rect.collidepoint(last_mouse_down.pos):
