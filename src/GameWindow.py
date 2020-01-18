@@ -286,9 +286,12 @@ class GameWindow(object):
             #                 drag_dredge = u
             #                 self.next_message = "dragging dredge %s"%d.name
 
-            if last_key_down and self.selected:
+            if last_key_down and isinstance(self.selected, BaseObjects.Unit):
                 if last_key_down.key in [K_UP, K_DOWN, K_LEFT, K_RIGHT]:
                     self.selected = controller.move_unit(self.selected, last_key_down.key)
+                    if self.selected:
+                        if self.selected.moved >= self.selected.move_speed:
+                            self.selected = self.selected.owner.next_to_move(self.selected)
 
             # # if drag_dredge:
             # #     if last_mouse_up:
@@ -302,6 +305,7 @@ class GameWindow(object):
             #move on with our lives
             if self.advance_turn:
                 controller.step()
+                self.update(controller.G)
                 if controller.G.current_player.units:
                     self.selected = controller.G.current_player.units[0]
                 self.advance_turn = False
