@@ -35,6 +35,11 @@ class Player(object):
         return ts_messages
 
     def next_to_move(self, u=None):
+        if not u:
+            if self.units:
+                u = self.units[0]
+            if u.moved < u.move_speed:
+                return u
         if u in self.units:
             i = self.units.index(u)
             after = [a for a in self.units[i:]]
@@ -45,7 +50,6 @@ class Player(object):
             for b in before:
                 if b.moved < b.move_speed:
                     return b
-        else:
-            return None
+        return None
 
 
