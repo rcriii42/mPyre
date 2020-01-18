@@ -6,7 +6,7 @@ from GraphicUtils import tile_texture
 import clickndrag
 import clickndrag.gui
 from GraphicUtils import colors
-import GroundUnits, Cities
+import BaseObjects, GroundUnits, Cities
 
 char_width = 10
 
@@ -151,12 +151,15 @@ class GameWindow(object):
             self._selected.plane.remove("outlined_selection")
             self._selected.plane.render()
         self._selected = s
-        if s:
+        if isinstance(s, BaseObjects.Unit):
+            self.show_city_status(s)
             img = s.plane.image.copy()
             pygame.draw.rect(img, red, [0, 0, 31, 31], 3)
             outlined = clickndrag.Plane("outlined_selection", Rect([0, 0, 31, 31]))
             outlined.image.blit(img, (0,0))
             s.plane.sub(outlined)
+        else:
+            pass
 
     def update(self, game):
         """update - update the game window"""
@@ -222,6 +225,7 @@ class GameWindow(object):
 
     def next_turn(self, object=None):
         """The user wishes to end the turn"""
+        self.selected = None
         self.advance_turn = True
 
     def mainloop(self, controller):
@@ -268,10 +272,6 @@ class GameWindow(object):
                     #did we click on a city?
                     if c.plane.rect.collidepoint(last_mouse_down.pos):
                         self.next_message =  "clicked on city of %s"%c.name
-                        city_loc = Rect((c.coords[0]+c.image_size[0],
-                                          c.coords[1]-15),
-                                          (len(c.name)*8, 15))
-                        self.show_city_status(c)
                         self.selected = c
 
                 for u in controller.G.units:
@@ -279,7 +279,6 @@ class GameWindow(object):
                     if u.plane.rect.collidepoint(last_mouse_down.pos):
                         if u.owner is controller.G.current_player:
                             self.next_message = "selected {}".format(u.name)
-                            self.show_city_status(u)
                             self.selected = u
                         else:
                             self.next_message = "could not select {}".format(u.name)
@@ -303,6 +302,8 @@ class GameWindow(object):
             #move on with our lives
             if self.advance_turn:
                 controller.step()
+                if controller.G.current_player.units:
+                    self.selected = controller.G.current_player.units[0]
                 self.advance_turn = False
             pygame.event.clear()
             if self.next_message: print(self.next_message)
