@@ -171,6 +171,8 @@ class GameWindow(object):
         if self._selected:
             self._selected.plane.remove("outlined_selection")
             self._selected.plane.render()
+            if not isinstance(self._selected, Cities.City):
+                self.game_plane.sub(self._selected.plane, 0)
         self._selected = s
         if isinstance(s, BaseObjects.Unit):
             self.show_city_status(s)
@@ -179,6 +181,7 @@ class GameWindow(object):
             outlined = clickndrag.Plane("outlined_selection", Rect([0, 0, 31, 31]))
             outlined.image.blit(img, (0,0))
             s.plane.sub(outlined)
+            self.game_plane.sub(s.plane)
         else:
             pass
 
@@ -189,13 +192,14 @@ class GameWindow(object):
             if not c.plane:
                 c.plane = clickndrag.Plane("City of {}".format(c.name), Rect(c.coords, c.image_size))
                 c.plane.image.blit(c.image, (0,0))
+                c.plane.sub(c.plane)
                 self.game_plane.sub(c.plane)
 
         for u in game.units:
             if not u.plane:
                 u.plane = clickndrag.Plane("Unit {}".format(u.name), Rect(u.coords, u.image_size))
                 u.plane.image.blit(u.image, (0,0))
-                self.game_plane.sub(u.plane)
+                self.game_plane.sub(u.plane, 0)
                 # d.plane.draggable=True
                 # self.game_plane.sub(d.plane)
 
