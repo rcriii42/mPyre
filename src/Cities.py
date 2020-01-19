@@ -46,6 +46,9 @@ class City(Unit):
         self.set_image()
         self.plane = None
 
+        self.is_container = True
+        self.contains = []
+
         self.building = not_building
         self.time_to_build = 0
 
@@ -54,6 +57,7 @@ class City(Unit):
         self.time_to_build -= 1
         if self.time_to_build == 0:
             self.owner.assign_unit(self.building)
+            self.contains.append(self.building)
             self.start_building()
             turn_messages.append("{} built {}".format(self.name,
                                                       self.owner.units[-1].name))
@@ -61,6 +65,5 @@ class City(Unit):
 
     def start_building(self):
         """Start building a unit"""
-        self.building = GroundUnits.Infantry(coords=(self.coords[0],
-                                                     self.coords[1]-32))
+        self.building = GroundUnits.Infantry(coords=self.coords)
         self.time_to_build = self.building.build_time

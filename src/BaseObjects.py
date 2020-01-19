@@ -34,6 +34,8 @@ class Unit(object):
         self.coords = coords
         self.image_file = os.path.join('graphics', 'city_tile_32x32.png')
 
+        self.is_container = False
+
         self.move_speed = 0
         self.moved = 0
 
