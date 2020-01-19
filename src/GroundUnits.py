@@ -84,14 +84,17 @@ class Infantry(Unit):
             return None
         new_coords = (self.coords[0]+ move_vector[0],
                       self.coords[1] + move_vector[1])
-        self.moved += 1
         u = self.check_collision(new_coords, G)
         if not u:
             self.coords = new_coords
             self.plane.rect.move_ip(move_vector)
+            self.moved += 1
             return None
-        else:
+        elif u.owner is not self.owner:
+            self.moved += 1
             return u
+        else:
+            return None
 
     def turn_step(self, G):
         turn_messages = ["{} turn {} moved {}".format(self.name, G.turn, self.moved)]
