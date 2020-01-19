@@ -127,7 +127,7 @@ class GameWindow(object):
         self.screenSize = width+15, height+15
         self.w32windowClass = "pygame"  #The win32 window class for this object
         self.screen = clickndrag.Display(self.screenSize) #pygame.display.set_mode(self.screenSize)
-        self.windowCaption = "mmPyre"
+        self.windowCaption = "mPyre"
         pygame.display.set_caption(self.windowCaption)        
         self.white = pygame.Color("white")
         self.screen.image.fill(self.white)
