@@ -137,8 +137,6 @@ class GameWindow(object):
 
         self.advance_turn = False
 
-        print(self)
-
         pygame.display.flip()
 
     @property
@@ -307,7 +305,13 @@ class GameWindow(object):
             
             #move on with our lives
             if self.advance_turn:
-                controller.step()
+                msgs = controller.step()
+                print("\n".join(msgs))
+                for m in msgs:
+                    if "lost!" in m:
+                        print(m)
+                    if "won!" in m:
+                        print(m)
                 self.update(controller.G)
                 if controller.G.current_player.units:
                     self.selected = controller.G.current_player.units[0]
