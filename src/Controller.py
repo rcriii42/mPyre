@@ -22,10 +22,15 @@ class World(object):
         """
         step_messages = []
         if move_type[0] == 'end_turn':
+            for p in self.G.players:
+                num_units = len(p.cities)+len(p.units)
+                if num_units < 1:
+                    self.G.player_lost(p)
+            if len(self.G.players) ==1:
+                step_messages.append("Player {} won!".format(self.G.players[0].name))
+
             if self.G.next_player is None:
-                print('Advancing turn to {}'.format(self.G.turn+1))
-                self.G.advance_turn()
-                step_messages.append("Turn: {0:,}".format(int(self.G.turn)))
+                step_messages.extend(self.G.advance_turn())
                 # Run World Value / Progress Calcs
                 for mycity in self.G.cities:
                     step_messages.extend(mycity.turn_step(self.G))
@@ -33,11 +38,8 @@ class World(object):
                 for myplayer in self.G.players:
                     #Note that players update their units
                     step_messages.extend(myplayer.turn_step(self.G))
-
             else:
-                print("{} turn ends, {} turn starts".format(self.G.current_player.name,
-                                                            self.G.next_player.name))
-                self.G.advance_player()
+                step_messages.extend(self.G.advance_player())
 
         # Record world for history I'm sure this will be interesting later 
         self.history[self.G.turn]=step_messages
@@ -64,8 +66,8 @@ class World(object):
                 if defender in defender.owner.cities:
                     #A city changes hands
                     print("resolve_combat: {} captured city of {}".format(attacker.name, defender.name))
-                    attacker.owner.assign_city(defender)
                     defender.owner.cities.remove(defender)
+                    attacker.owner.assign_city(defender)
                     defender.plane.destroy()
                     defender.plane = None
                 else:
@@ -74,6 +76,7 @@ class World(object):
                     defender.owner.units.remove(defender)
                     defender.plane.destroy()
                     attacker.plane.rect.move(defender.coords)
+                    del defender
             return attacker
         else: #Defender won
             attacker.current_strength -= defender.defense
@@ -82,4 +85,5 @@ class World(object):
                 print("resolve_combat: {} defeated by {}".format(attacker.name, defender.name))
                 attacker.owner.units.remove(attacker)
                 attacker.plane.destroy()
+                del attacker
             return None
