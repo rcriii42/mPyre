@@ -190,6 +190,9 @@ class Plane(object):
             self.subplanes_list.insert(self.subplanes_list.index(insert_after) + 1,
                                        plane.name)
 
+        elif insert_after == 0:
+            self.subplanes_list.insert(0, plane.name)
+
         else:
             self.subplanes_list.append(plane.name)
 
