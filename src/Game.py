@@ -26,13 +26,13 @@ class Game(object):
                            City("Jacksonville", (32, 19*32)),
                            ]
         self.cities = random.sample(possible_cities, 3)
-        print([c.name for c in self.cities])
 
         self.neutral = Player(name="Neutral", color = "white")
         for c in self.cities:
             self.neutral.assign_city(c, build_unit=False)
 
-        self.players = [Player(), Player(name="Blue", color='blue')]
+        self.players = [Player(),
+                        Player(name="Blue", color='blue')]
         self.players[0].assign_unit(Infantry(coords=(self.cities[2].coords[0] + 32,
                                                      self.cities[2].coords[1])))
         self.players[1].assign_unit(Infantry(coords=(self.cities[0].coords[0] + 32,
@@ -42,6 +42,8 @@ class Game(object):
         self.players[1].assign_city(self.cities[2])
 
         self.player_turn_list = self.players.copy()
+
+        self.lost_players = []
 
     @property
     def units(self):
@@ -56,19 +58,30 @@ class Game(object):
     @property
     def next_player(self):
         """The next player in turn"""
-        if len(self.player_turn_list) == 1:
+        if len(self.player_turn_list) <= 1:
             return None
         else:
             return self.player_turn_list[1]
 
     def advance_player(self):
-        if len(self.player_turn_list) == 1:
-            return False
+        msgs = []
+        if len(self.player_turn_list) <= 1:
+            return msgs
         else:
             self.player_turn_list.pop(0)
-            return self.current_player
+            return ["Starting {} turn {}".format(self.current_player.name,
+                                                 self.turn)]
 
     def advance_turn(self):
         """advance the turn and reset players"""
         self.turn += 1
         self.player_turn_list = self.players.copy()
+        return ["Turn: {}".format(self.turn)]
+
+    def player_lost(self, p):
+        """The player lost, remove them from the game"""
+        self.lost_players.append(p)
+        self.players.remove(p)
+        if p in self.player_turn_list:
+            self.player_turn_list.remove(p)
+        return "Player {} lost!".format(p.name)
