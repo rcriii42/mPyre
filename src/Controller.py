@@ -95,7 +95,6 @@ class World(object):
                     defender.owner.units.remove(defender)
                     defender.plane.destroy()
                     attacker.plane.rect.move(defender.coords)
-                    del defender
             return attacker
         else: #Defender won
             attacker.current_strength -= defender.defense
@@ -104,5 +103,4 @@ class World(object):
                 print("resolve_combat: {} defeated by {}".format(attacker.name, defender.name))
                 attacker.owner.units.remove(attacker)
                 attacker.plane.destroy()
-                del attacker
             return None
