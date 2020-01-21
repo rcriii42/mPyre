@@ -94,6 +94,7 @@ class World(object):
                     print("resolve_combat: {} defeated {}".format(attacker.name, defender.name))
                     defender.owner.units.remove(defender)
                     defender.plane.destroy()
+                    defender.plane = None
                     attacker.plane.rect.move(defender.coords)
             return attacker
         else: #Defender won
@@ -103,4 +104,5 @@ class World(object):
                 print("resolve_combat: {} defeated by {}".format(attacker.name, defender.name))
                 attacker.owner.units.remove(attacker)
                 attacker.plane.destroy()
+                attacker.plane = None
             return None
