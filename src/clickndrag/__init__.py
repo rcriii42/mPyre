@@ -333,9 +333,13 @@ class Plane(object):
                     # Subplanes are already rendered. Force-blit them in order.
                     #
                     for name in self.subplanes_list:
-
-                        self.rendersurface.blit(self.subplanes[name].rendersurface,
+                        try:
+                            self.rendersurface.blit(self.subplanes[name].rendersurface,
                                                 self.subplanes[name].rect)
+                        except TypeError:
+                            print("{} tried to render {}".format(self.name, name))
+                            raise
+
 
                     self.last_image_id = id(self.image)
 
@@ -433,7 +437,6 @@ class Plane(object):
     def destroy(self):
         """Remove this Plane from the parent plane, remove all subplanes and delete all pygame Surfaces.
         """
-
         if self.parent is not None:
 
             self.parent.remove(self.name)
