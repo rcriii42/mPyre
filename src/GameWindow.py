@@ -77,12 +77,12 @@ class CityStatus(clickndrag.gui.Container):
     """
     CityStatus - Class to wrap a status window for a city that updates each turn
     """
-    def __init__(self, name, city, msgs=[] ,padding = 0, background_color = None):
+    def __init__(self, city, msgs=[] ,padding = 0, background_color = None):
         """
         initialize.  Initialized with a name, destroy button in upper right, and
         basic city information.
         """
-        clickndrag.gui.Container.__init__(self, name, padding, background_color)
+        clickndrag.gui.Container.__init__(self, "{}_status".format(city.name), padding, background_color)
         self.city = city
         if city.owner:
             owner_name = city.owner.name
@@ -169,9 +169,10 @@ class GameWindow(object):
     @selected.setter
     def selected(self, s):
         if self._selected:
-            self._selected.plane.remove("outlined_selection")
-            self._selected.plane.render()
-            if not isinstance(self._selected, Cities.City):
+            if self._selected.plane:
+                self._selected.plane.remove("outlined_selection")
+                self._selected.plane.render()
+            if not isinstance(self._selected, Cities.City) and self._selected.plane:
                 self.game_plane.sub(self._selected.plane, 0)
         self._selected = s
         if isinstance(s, BaseObjects.Unit):
@@ -227,7 +228,7 @@ class GameWindow(object):
         else: #assume the unit is a combat unit
             msgs = [('strength', 'Strength: {}'.format(c.current_strength)),
                     ('moves_left:', 'Moves: {}'.format(c.move_speed - c.moved))]
-        city_status = CityStatus(c.name, c, msgs)
+        city_status = CityStatus(c, msgs)
 
         #place city status where it will not lap off the edge of the screen, starting in top left
         if c.plane.rect.left-city_status.rect.width>self.game_plane.rect.left and c.plane.rect.top-city_status.rect.height>self.game_plane.rect.top:
