@@ -21,6 +21,7 @@
 
 import os
 from BaseObjects import Unit
+import Cities
 from GraphicUtils import colors
 from pygame.locals import K_UP, K_DOWN, K_LEFT, K_RIGHT
 from pygame.locals import K_KP1, K_KP2, K_KP3, K_KP4, K_KP6, K_KP7, K_KP8, K_KP9
@@ -113,6 +114,11 @@ class Infantry(Unit):
         elif u.owner is not self.owner:
             self.moved += 1
             return u
+        elif isinstance(u, Cities.City):
+            self.coords = new_coords
+            self.plane.rect.move_ip(move_vector)
+            self.moved += 1
+            return None
         else:
             return None
 
