@@ -124,7 +124,7 @@ class GameWindow(object):
         self.clock = pygame.time.Clock()
         
         pygame.init()
-        self.screenSize = width+15, height+15
+        self.screenSize = width+15, height+30
         self.w32windowClass = "pygame"  #The win32 window class for this object
         self.screen = clickndrag.Display(self.screenSize) #pygame.display.set_mode(self.screenSize)
         self.windowCaption = "mPyre"
@@ -144,11 +144,11 @@ class GameWindow(object):
         
         #The main status display - Date and player $$
         self.turn_status = clickndrag.gui.Button("Turn: 1",
-                                                Rect(0, self.screenSize[1]-15, 150, 15),
+                                                Rect(0, self.screenSize[1]-30, 150, 30),
                                                 self.next_turn) #callback placeholder
         self.screen.sub(self.turn_status)
         self.player_status = clickndrag.gui.Button("Player: player_1",
-                                                   Rect(150, self.screenSize[1]-15, 125, 15),
+                                                   Rect(150, self.screenSize[1]-30, 125, 30),
                                                    None) #callback placeholder
         self.screen.sub(self.player_status)
 
