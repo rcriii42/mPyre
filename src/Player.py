@@ -29,6 +29,8 @@ class Player(object):
         self.units = []
         self.color = color
 
+        self.AI = None
+
     def assign_city(self, city, build_unit=True):
         """assign a city to the player"""
         self.cities.append(city)
