@@ -61,10 +61,10 @@ class Game(object):
         self.players[0].assign_unit(Infantry(coords=(c.coords[0],
                                                      c.coords[1])))
 
-        if "Norfolk" in [c.name for c in self.cities]:
-            c = [c for c in self.cities if c.name == "Norfolk"][0]
-        else:
+        if "Jacksonville" in [c.name for c in self.cities]:
             c = [c for c in self.cities if c.name == "Jacksonville"][0]
+        else:
+            c = [c for c in self.cities if c.name == "Norfolk"][0]
         self.players[1].assign_city(c)
         self.players[1].assign_unit(Infantry(coords=(c.coords[0],
                                                      c.coords[1])))
