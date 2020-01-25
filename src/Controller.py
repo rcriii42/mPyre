@@ -66,18 +66,22 @@ class World(object):
 
     def move_unit(self, moving_unit, key):
         """Move the given unit if possible"""
-        if moving_unit.move_speed > 0:
+        while moving_unit.move_speed > moving_unit.moved:
             target_unit = moving_unit.move(key, self.G)
             if target_unit:
                 if target_unit.owner is not moving_unit.owner: #Attack!
-                    return self.resolve_combat(moving_unit, target_unit)
+                    if not self.resolve_combat(moving_unit, target_unit):
+                        return None
             else:
                 return moving_unit
-        else:
-            return None
+
+        return None
 
     def resolve_combat(self, attacker, defender):
-        """Resolve an attack by one unit on another"""
+        """Resolve an attack by one unit on another
+
+        return Tue is the unit survived
+        """
         result = random.random()*(attacker.attack+defender.defense)
         if result < attacker.attack: #Attacker won
             defender.current_strength -= attacker.attack
@@ -89,14 +93,19 @@ class World(object):
                     attacker.owner.assign_city(defender)
                     defender.plane.destroy()
                     defender.plane = None
+                    attacker.plane.rect.move(defender.coords)
+                    attacker.owner.units.remove(attacker)
+                    attacker.plane.destroy()
+                    attacker.plane = None
+                    return False
                 else:
                     #A unit is destroyed
                     print("resolve_combat: {} defeated {}".format(attacker.name, defender.name))
+                    attacker.coords
                     defender.owner.units.remove(defender)
                     defender.plane.destroy()
                     defender.plane = None
-                    attacker.plane.rect.move(defender.coords)
-            return attacker
+                    return True
         else: #Defender won
             attacker.current_strength -= defender.defense
             if attacker.current_strength <= 0:
@@ -105,4 +114,4 @@ class World(object):
                 attacker.owner.units.remove(attacker)
                 attacker.plane.destroy()
                 attacker.plane = None
-            return None
+            return False

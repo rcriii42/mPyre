@@ -111,7 +111,6 @@ class Infantry(Unit):
             self.moved += 1
             return None
         elif u.owner is not self.owner:
-            self.moved += 1
             return u
         else:
             return None
