@@ -52,13 +52,22 @@ class Game(object):
 
         self.players = [Player(),
                         Player(name="Blue", color='blue')]
-        self.players[0].assign_unit(Infantry(coords=(self.cities[2].coords[0] + 32,
-                                                     self.cities[2].coords[1])))
-        self.players[1].assign_unit(Infantry(coords=(self.cities[0].coords[0] + 32,
-                                                     self.cities[0].coords[1])))
 
-        self.players[0].assign_city(self.cities[0])
-        self.players[1].assign_city(self.cities[2])
+        if "Boston" in [c.name for c in self.cities]:
+            c = [c for c in self.cities if c.name == "Boston"][0]
+        else:
+            c = [c for c in self.cities if c.name == "New York"][0]
+        self.players[0].assign_city(c)
+        self.players[0].assign_unit(Infantry(coords=(c.coords[0],
+                                                     c.coords[1])))
+
+        if "Norfolk" in [c.name for c in self.cities]:
+            c = [c for c in self.cities if c.name == "Norfolk"][0]
+        else:
+            c = [c for c in self.cities if c.name == "Jacksonville"][0]
+        self.players[1].assign_city(c)
+        self.players[1].assign_unit(Infantry(coords=(c.coords[0],
+                                                     c.coords[1])))
 
         self.player_turn_list = self.players.copy()
 
