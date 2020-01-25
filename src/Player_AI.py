@@ -18,16 +18,28 @@
 #
 #     Work on this file started on 25 January, 2020
 
+import pygame.time
+
 class AI():
     """An AI to control a player"""
     def __init__(self, player, game):
         self.player = player
         self.game = game
 
+        self.moving_unit = None
+        self.moving_unit_selected = True
+
     def next_move(self):
         """Determine my next move
 
         return a list with messages for the game window:
         'End_Turn': end my turn
+        'select', Unit: select the given unit
         """
-        return ["End Turn"]
+        pygame.time.wait(500)
+        self.moving_unit = self.player.next_to_move()
+        if self.moving_unit and not self.moving_unit_selected:
+            return ['select', self.moving_unit]
+            self.moving_unit_selected = True
+        else:
+            return ["End Turn"]
