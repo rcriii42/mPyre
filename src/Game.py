@@ -24,6 +24,7 @@ import random
 from Cities import City
 from Player import Player
 from GroundUnits import Infantry
+from Player_AI import AI
 
 Demo = True
 
@@ -43,30 +44,30 @@ class Game(object):
                            City("Norfolk", (9*32, 11*32)),
                            City("Jacksonville", (32, 19*32)),
                            ]
-        self.cities = random.sample(possible_cities, 3)
+        self.cities = possible_cities
 
         self.neutral = Player(name="Neutral", color = "white")
         for c in self.cities:
             self.neutral.assign_city(c, build_unit=False)
 
         self.players = [Player(),
-                        Player(name="Blue", color='blue')]
+                        Player(name="Blue", color='blue'),
+                        Player(name="MLBBR", color='orange')]
 
-        if "Boston" in [c.name for c in self.cities]:
-            c = [c for c in self.cities if c.name == "Boston"][0]
-        else:
-            c = [c for c in self.cities if c.name == "New York"][0]
-        self.players[0].assign_city(c)
-        self.players[0].assign_unit(Infantry(coords=(c.coords[0],
-                                                     c.coords[1])))
+        self.players[0].assign_city(possible_cities[0])
+        self.players[0].assign_unit(Infantry(coords=(possible_cities[0].coords[0],
+                                                     possible_cities[0].coords[1])))
 
-        if "Jacksonville" in [c.name for c in self.cities]:
-            c = [c for c in self.cities if c.name == "Jacksonville"][0]
-        else:
-            c = [c for c in self.cities if c.name == "Norfolk"][0]
-        self.players[1].assign_city(c)
-        self.players[1].assign_unit(Infantry(coords=(c.coords[0],
+        self.players[1].assign_city(possible_cities[-1])
+        self.players[1].assign_unit(Infantry(coords=(possible_cities[-1].coords[0],
+                                                     possible_cities[-1].coords[1])))
+
+        c = random.sample(possible_cities[1:3], 1)[0]
+        self.players[2].assign_city(c)
+        self.players[2].assign_unit(Infantry(coords=(c.coords[0],
                                                      c.coords[1])))
+        self.players[2].AI = AI(self.players[2],
+                                self)
 
         self.player_turn_list = self.players.copy()
 
