@@ -70,9 +70,7 @@ class World(object):
             target_unit = moving_unit.move(key, self.G)
             if target_unit:
                 if target_unit.owner is not moving_unit.owner: #Attack!
-                    u = self.resolve_combat(moving_unit, target_unit)
-                    if u is moving_unit:
-                        return moving_unit.move(key, self.G)
+                    return self.resolve_combat(moving_unit, target_unit)
             else:
                 return moving_unit
         else:

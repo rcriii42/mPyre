@@ -106,14 +106,15 @@ class Infantry(Unit):
         new_coords = (self.coords[0]+ move_vector[0],
                       self.coords[1] + move_vector[1])
         u = self.check_collision(new_coords, G)
-        if not u: #Move into an empty space
+        if not u:
             self.coords = new_coords
             self.plane.rect.move_ip(move_vector)
             self.moved += 1
             return None
-        elif u.owner is not self.owner: #Attack!
+        elif u.owner is not self.owner:
+            self.moved += 1
             return u
-        elif isinstance(u, Cities.City): #Move into a city
+        elif isinstance(u, Cities.City):
             self.coords = new_coords
             self.plane.rect.move_ip(move_vector)
             self.moved += 1
