@@ -26,8 +26,8 @@ from pygame.locals import QUIT, MOUSEMOTION, MOUSEBUTTONDOWN, MOUSEBUTTONUP
 from pygame.locals import KEYDOWN, K_UP, K_DOWN, K_LEFT, K_RIGHT
 from pygame.locals import K_KP1, K_KP2, K_KP3, K_KP4, K_KP6, K_KP7, K_KP8, K_KP9
 from GraphicUtils import tile_texture
-import clickndrag
-import clickndrag.gui
+import planes
+import planes.gui
 from GraphicUtils import colors
 import BaseObjects, GroundUnits, Cities
 
@@ -43,7 +43,7 @@ buff = (240, 220, 130)
 black = (0, 0, 0, 255)
 
 bubble_nos = set(range(1000)) #serial nos for bubbles, hope we never have more than 1000
-class MessageBubble(clickndrag.gui.OutlinedText):
+class MessageBubble(planes.gui.OutlinedText):
     """
     MessageBubble - A label that self-destructs after a short period of time
     """
@@ -57,7 +57,7 @@ class MessageBubble(clickndrag.gui.OutlinedText):
         """
         self.num = bubble_nos.pop()
         name = "%s_%d"%(item.name, self.num)
-        clickndrag.gui.OutlinedText.__init__(self, name, text, text_color)
+        planes.gui.OutlinedText.__init__(self, name, text, text_color)
         self.clock = pygame.time.Clock()
         self.life = res_time*1000.
         self.float = (float, float*-1)
@@ -66,14 +66,14 @@ class MessageBubble(clickndrag.gui.OutlinedText):
         """Call the base class update, then check for end-of-life.
         """
         self.rect.move_ip(self.float)
-        clickndrag.gui.Label.update(self)
+        planes.gui.Label.update(self)
         self.life -= self.clock.tick()
         if self.life <= 0:
             bubble_nos.add(self.num)
             self.destroy()
         return
 
-class CityStatus(clickndrag.gui.Container):
+class CityStatus(planes.gui.Container):
     """
     CityStatus - Class to wrap a status window for a city that updates each turn
     """
@@ -82,7 +82,7 @@ class CityStatus(clickndrag.gui.Container):
         initialize.  Initialized with a name, destroy button in upper right, and
         basic city information.
         """
-        clickndrag.gui.Container.__init__(self, "{}_status".format(city.name), padding, background_color)
+        planes.gui.Container.__init__(self, "{}_status".format(city.name), padding, background_color)
         self.city = city
         if city.owner:
             owner_name = city.owner.name
@@ -95,13 +95,13 @@ class CityStatus(clickndrag.gui.Container):
 
         name_length = max([len(s[1]) for s in city_data_strs])*char_width+char_width
         for s in city_data_strs:
-            name_label=clickndrag.gui.Label(s[0],
+            name_label=planes.gui.Label(s[0],
                                             s[1],
                                             Rect(0, 0, name_length, 15),
                                             background_color=teal)
             self.sub(name_label)
 
-        destroy_button = clickndrag.gui.Button('X',
+        destroy_button = planes.gui.Button('X',
                                                Rect(name_label.rect.width-char_width, 0, char_width, 15),
                                                lambda x: x.parent.parent.destroy(),
                                                background_color=teal)
@@ -112,7 +112,7 @@ class CityStatus(clickndrag.gui.Container):
         """
         Update the labels for the city.
         """
-        clickndrag.gui.Container.update(self)
+        planes.gui.Container.update(self)
 
 class GameWindow(object):
     """
@@ -126,7 +126,7 @@ class GameWindow(object):
         pygame.init()
         self.screenSize = width+15, height+30
         self.w32windowClass = "pygame"  #The win32 window class for this object
-        self.screen = clickndrag.Display(self.screenSize) #pygame.display.set_mode(self.screenSize)
+        self.screen = planes.Display(self.screenSize) #pygame.display.set_mode(self.screenSize)
         self.windowCaption = "mPyre"
         pygame.display.set_caption(self.windowCaption)        
         self.white = pygame.Color("white")
@@ -137,17 +137,17 @@ class GameWindow(object):
         plains_tile = pygame.image.load(os.path.join('graphics', 'plains_tile_32x32.png')).convert()
         self.tiles = [plains_tile]*100
         menu_margin = width#*.75
-        self.game_plane = clickndrag.Plane("game screen", Rect(0, 0, menu_margin, height))
+        self.game_plane = planes.Plane("game screen", Rect(0, 0, menu_margin, height))
         self.game_background = tile_texture(self.game_plane.image, self.tiles)
         self.game_plane.image.blit(self.game_background, (0,0))
         self.screen.sub(self.game_plane)
         
         #The main status display - Date and player $$
-        self.turn_status = clickndrag.gui.Button("Turn: 1",
+        self.turn_status = planes.gui.Button("Turn: 1",
                                                 Rect(0, self.screenSize[1]-30, 150, 30),
                                                 self.next_turn) #callback placeholder
         self.screen.sub(self.turn_status)
-        self.player_status = clickndrag.gui.Button("Player: player_1",
+        self.player_status = planes.gui.Button("Player: player_1",
                                                    Rect(150, self.screenSize[1]-30, 125, 30),
                                                    None) #callback placeholder
         self.screen.sub(self.player_status)
@@ -171,15 +171,16 @@ class GameWindow(object):
         if self._selected:
             if self._selected.plane:
                 self._selected.plane.remove("outlined_selection")
-                self._selected.plane.render()
+                #self._selected.plane.render()
             if not isinstance(self._selected, Cities.City) and self._selected.plane:
-                self.game_plane.sub(self._selected.plane, 0)
+                self.game_plane.sub(self._selected.plane,
+                                    insert_before=self.game_plane.subplanes_list[0])
         self._selected = s
         if isinstance(s, BaseObjects.Unit):
             self.show_city_status(s)
             img = s.plane.image.copy()
             pygame.draw.rect(img, red, [0, 0, 31, 31], 3)
-            outlined = clickndrag.Plane("outlined_selection", Rect([0, 0, 31, 31]))
+            outlined = planes.Plane("outlined_selection", Rect([0, 0, 31, 31]))
             outlined.image.blit(img, (0,0))
             s.plane.sub(outlined)
             self.game_plane.sub(s.plane)
@@ -190,19 +191,19 @@ class GameWindow(object):
         """update - update the game window"""
         self.game_plane.image.blit(self.game_background, (0,0)) #reset background drawing
         for c in game.cities:
+            for u in game.units:
+                if not u.plane:
+                    u.plane = planes.Plane("Unit {}".format(u.name), Rect(u.coords, u.image_size))
+                    u.plane.image.blit(u.image, (0, 0))
+                    self.game_plane.sub(u.plane, 0)
+                    # d.plane.draggable=True
+                    # self.game_plane.sub(d.plane)
+
             if not c.plane:
-                c.plane = clickndrag.Plane("City of {}".format(c.name), Rect(c.coords, c.image_size))
+                c.plane = planes.Plane("City of {}".format(c.name), Rect(c.coords, c.image_size))
                 c.plane.image.blit(c.image, (0,0))
                 c.plane.sub(c.plane)
                 self.game_plane.sub(c.plane)
-
-        for u in game.units:
-            if not u.plane:
-                u.plane = clickndrag.Plane("Unit {}".format(u.name), Rect(u.coords, u.image_size))
-                u.plane.image.blit(u.image, (0,0))
-                self.game_plane.sub(u.plane, 0)
-                # d.plane.draggable=True
-                # self.game_plane.sub(d.plane)
 
         if not self.selected and self.status_window:
             self.status_window.destroy()
@@ -266,7 +267,7 @@ class GameWindow(object):
             #         self.game_plane.sub(mb)
             #Check events
             event_list = pygame.event.get()
-            self.screen.process(event_list) #Let clickndrag go first
+            self.screen.process(event_list) #Let planes go first
             self.next_message=None
             last_mouse_move = None
             last_mouse_down = None
