@@ -44,7 +44,7 @@ class World(object):
             for p in self.G.players:
                 num_units = len(p.cities)+len(p.units)
                 if num_units < 1:
-                    self.G.player_lost(p)
+                    step_messages.append(self.G.player_lost(p))
             if len(self.G.players) ==1:
                 step_messages.append("Player {} won!".format(self.G.players[0].name))
 
