@@ -25,6 +25,7 @@ from GraphicUtils import colors
 from pygame.locals import K_UP, K_DOWN, K_LEFT, K_RIGHT
 from pygame.locals import K_KP1, K_KP2, K_KP3, K_KP4, K_KP6, K_KP7, K_KP8, K_KP9
 import random
+import Cities
 
 class unit_namer:
     """class to manage unit names"""
@@ -112,6 +113,11 @@ class Infantry(Unit):
             return None
         elif u.owner is not self.owner:
             return u
+        elif isinstance(u, Cities.City):
+            self.coords = new_coords
+            self.plane.rect.move_ip(move_vector)
+            self.moved += 1
+            return None
         else:
             return None
 
