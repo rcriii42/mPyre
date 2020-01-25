@@ -25,12 +25,12 @@ from pygame.locals import Rect
 from pygame.locals import QUIT, MOUSEMOTION, MOUSEBUTTONDOWN, MOUSEBUTTONUP
 from pygame.locals import KEYDOWN, K_UP, K_DOWN, K_LEFT, K_RIGHT
 from pygame.locals import K_KP1, K_KP2, K_KP3, K_KP4, K_KP6, K_KP7, K_KP8, K_KP9
-from pygame.locals import K_n, K_x
+from pygame.locals import K_n
 from GraphicUtils import tile_texture
 import planes
 import planes.gui
 from GraphicUtils import colors
-import BaseObjects, GroundUnits, Cities
+import BaseObjects, Cities
 
 char_width = 10
 

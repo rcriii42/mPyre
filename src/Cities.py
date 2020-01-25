@@ -22,9 +22,7 @@ Cities - Contains the code for City objects
 
 
 import os
-import pygame
 from BaseObjects import Unit
-from GraphicUtils import colors
 import GroundUnits
 
 

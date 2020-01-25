@@ -24,7 +24,6 @@ import random
 from Cities import City
 from Player import Player
 from GroundUnits import Infantry
-from GraphicUtils import colors
 
 Demo = True
 

@@ -19,8 +19,7 @@
 #     Work started on 19 December, 2019
 
 
-import pygame , random , sys , math , time , pickle, os
-from pygame.locals import *
+import pygame , random
 
 colors = {'green': (51, 255, 0),
           'blue':( 0, 0, 255),

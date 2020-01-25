@@ -21,7 +21,6 @@
 
 import os
 from BaseObjects import Unit
-from GraphicUtils import colors
 from pygame.locals import K_UP, K_DOWN, K_LEFT, K_RIGHT
 from pygame.locals import K_KP1, K_KP2, K_KP3, K_KP4, K_KP6, K_KP7, K_KP8, K_KP9
 import random
