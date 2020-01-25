@@ -320,6 +320,8 @@ class GameWindow(object):
                     if self.selected:
                         if self.selected.moved >= self.selected.move_speed:
                             self.selected = self.selected.owner.next_to_move(self.selected)
+                    else:
+                        self.selected = controller.G.current_player.next_to_move()
 
             # # if drag_dredge:
             # #     if last_mouse_up:
