@@ -25,6 +25,7 @@ from pygame.locals import Rect
 from pygame.locals import QUIT, MOUSEMOTION, MOUSEBUTTONDOWN, MOUSEBUTTONUP
 from pygame.locals import KEYDOWN, K_UP, K_DOWN, K_LEFT, K_RIGHT
 from pygame.locals import K_KP1, K_KP2, K_KP3, K_KP4, K_KP6, K_KP7, K_KP8, K_KP9
+from pygame.locals import K_n, K_x
 from GraphicUtils import tile_texture
 import planes
 import planes.gui
@@ -191,19 +192,20 @@ class GameWindow(object):
         """update - update the game window"""
         self.game_plane.image.blit(self.game_background, (0,0)) #reset background drawing
         for c in game.cities:
-            for u in game.units:
-                if not u.plane:
-                    u.plane = planes.Plane("Unit {}".format(u.name), Rect(u.coords, u.image_size))
-                    u.plane.image.blit(u.image, (0, 0))
-                    self.game_plane.sub(u.plane, 0)
-                    # d.plane.draggable=True
-                    # self.game_plane.sub(d.plane)
-
             if not c.plane:
                 c.plane = planes.Plane("City of {}".format(c.name), Rect(c.coords, c.image_size))
                 c.plane.image.blit(c.image, (0,0))
                 c.plane.sub(c.plane)
                 self.game_plane.sub(c.plane)
+
+        for u in game.units:
+            if not u.plane:
+                u.plane = planes.Plane("Unit {}".format(u.name), Rect(u.coords, u.image_size))
+                u.plane.image.blit(u.image, (0, 0))
+                self.game_plane.sub(u.plane,
+                                    insert_before=self.game_plane.subplanes_list[0])
+                # d.plane.draggable=True
+                # self.game_plane.sub(d.plane)
 
         if not self.selected and self.status_window:
             self.status_window.destroy()
@@ -313,16 +315,19 @@ class GameWindow(object):
             #                 drag_dredge = u
             #                 self.next_message = "dragging dredge %s"%d.name
 
-            if last_key_down and isinstance(self.selected, BaseObjects.Unit):
-                if last_key_down.key in [K_UP, K_DOWN, K_LEFT, K_RIGHT,
-                                         K_KP1, K_KP2, K_KP3, K_KP4,
-                                         K_KP6, K_KP7, K_KP8, K_KP9]:
+            if last_key_down:
+                if  isinstance(self.selected, BaseObjects.Unit) and\
+                    last_key_down.key in [K_UP, K_DOWN, K_LEFT, K_RIGHT,
+                                          K_KP1, K_KP2, K_KP3, K_KP4,
+                                          K_KP6, K_KP7, K_KP8, K_KP9]:
                     self.selected = controller.move_unit(self.selected, last_key_down.key)
                     if self.selected:
                         if self.selected.moved >= self.selected.move_speed:
                             self.selected = self.selected.owner.next_to_move(self.selected)
                     else:
                         self.selected = controller.G.current_player.next_to_move()
+                elif last_key_down.key in [K_n]:
+                    self.selected = controller.G.current_player.next_to_move(self.selected)
 
             # # if drag_dredge:
             # #     if last_mouse_up:
