@@ -80,7 +80,7 @@ class World(object):
     def resolve_combat(self, attacker, defender):
         """Resolve an attack by one unit on another
 
-        return Tue is the unit survived
+        return True if the unit survived
         """
         result = random.random()*(attacker.attack+defender.defense)
         if result < attacker.attack: #Attacker won
