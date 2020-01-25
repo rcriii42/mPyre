@@ -262,6 +262,13 @@ class GameWindow(object):
         drag_dredge = False
         while controller.end != True:
             self.update(controller.G)
+            if controller.G.current_player.AI:
+                print("AI for {} taking turn.".format(controller.G.current_player.name))
+                msgs = controller.G.current_player.AI.next_move()
+                if 'End Turn' in msgs:
+                  self.next_turn()
+                pygame.event.clear()
+
             # for m in messages:
             #     if m[1]:
             #         mb = MessageBubble(m[0].plane, m[1], float=2)
