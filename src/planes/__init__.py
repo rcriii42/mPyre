@@ -39,8 +39,10 @@ VERSION = "0.6.1"
 TIMER_FUNC = None
 
 if platform.system().lower() == "windows":
-
-    TIMER_FUNC = time.clock
+    try:
+        TIMER_FUNC = time.clock
+    except AttributeError: #Post python 3.3
+        TIMER_FUNC = time.perf_counter
 
 else:
     TIMER_FUNC = time.time
@@ -907,13 +909,13 @@ class Display(Plane):
            If force is True, blit to Pygame display regardless.
         """
 
-        starttime = time.clock()
+        starttime = TIMER_FUNC()
 
         self.display.blit(self.image, (0, 0))
 
         rendered_something = Plane.render(self, self.display, self.rect)
 
-        STATS.log_render_time(time.clock() - starttime)
+        STATS.log_render_time(TIMER_FUNC() - starttime)
 
         if rendered_something or force or self.dragged_plane is not None:
 
