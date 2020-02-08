@@ -89,11 +89,9 @@ class World(object):
                 if defender in defender.owner.cities:
                     #A city changes hands
                     print("resolve_combat: {} captured city of {}".format(attacker.name, defender.name))
-                    defender.owner.cities.remove(defender)
                     attacker.owner.assign_city(defender)
                     defender.plane.destroy()
                     defender.plane = None
-                    attacker.plane.rect.move(defender.coords)
                     attacker.owner.units.remove(attacker)
                     attacker.plane.destroy()
                     attacker.plane = None
@@ -101,7 +99,7 @@ class World(object):
                 else:
                     #A unit is destroyed
                     print("resolve_combat: {} defeated {}".format(attacker.name, defender.name))
-                    attacker.coords
+                    attacker.coords = defender.coords
                     defender.owner.units.remove(defender)
                     defender.plane.destroy()
                     defender.plane = None
