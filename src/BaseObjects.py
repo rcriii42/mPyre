@@ -102,14 +102,23 @@ class Map(object):
         self.terrain ={}
 
 
-    def __getitem__(self, item):
-        if type(item) is not type(self.dims):
-            raise TypeError("Invalid type for map coords: {}".format(item))
-        if item[0] > self.dims[0] or item[1] > self.dims[1]:
-            raise KeyError("Coordinates out of bounds: {}".format(item))
-        if item[0] < 0 or item[1] < 0:
-            raise KeyError("Coordinates out of bounds: {}".format(item))
-        if item[0] in (0, self.dims[0]) or item[1] in (0, self.dims[1]):
-            return "border"
-        return self.terrain.get(item, "plains")
+    def __getitem__(self, key):
+        if type(key) is not type(self.dims):
+            raise TypeError("Invalid type for map coords: {}".format(key))
+        if key[0] > self.dims[0] or key[1] > self.dims[1]:
+            raise KeyError("Coordinates out of bounds: {}".format(key))
+        if key[0] < 0 or key[1] < 0:
+            raise KeyError("Coordinates out of bounds: {}".format(key))
+        if key[0] in (0, self.dims[0]) or key[1] in (0, self.dims[1]):
+            return "edge"
+        return self.terrain.get(key, "plains")
+
+    def __setitem__(self, key, value):
+        if type(key) is not type(self.dims):
+            raise TypeError("Invalid type for map coords: {}".format(key))
+        if key[0] > self.dims[0] or key[1] > self.dims[1]:
+            raise KeyError("Coordinates out of bounds: {}".format(key))
+        if key[0] < 0 or key[1] < 0:
+            raise KeyError("Coordinates out of bounds: {}".format(key))
+        self.terrain[key] = value
 
