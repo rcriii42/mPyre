@@ -77,7 +77,13 @@ class Game(object):
         self.lost_players = []
 
         self.map = Map(dims = size)
+        for x in range(18*32, 24*32, 32):
+            for y in range(32, 4*32, 32):
+                self.map[x, y] = "water"
 
+    @property
+    def size(self):
+        return self.map.dims
 
     @property
     def units(self):
@@ -119,3 +125,4 @@ class Game(object):
         if p in self.player_turn_list:
             self.player_turn_list.remove(p)
         return "Player {} lost!".format(p.name)
+
