@@ -37,7 +37,7 @@ class Player(object):
             city.owner.cities.remove(city)
             for u in city.owner.units.copy():
                 if u.coords == city.coords:
-                    u.owner.units.remove(defender)
+                    u.owner.units.remove(u)
                     u.plane.destroy()
                     u.plane = None
 
