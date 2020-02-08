@@ -125,7 +125,7 @@ class GameWindow(object):
         self.clock = pygame.time.Clock()
         
         pygame.init()
-        self.screenSize = width+15, height+30
+        self.screenSize = width + 32*2, height + 32*2 + 30
         self.w32windowClass = "pygame"  #The win32 window class for this object
         self.screen = planes.Display(self.screenSize) #pygame.display.set_mode(self.screenSize)
         self.windowCaption = "mPyre"
@@ -136,11 +136,20 @@ class GameWindow(object):
         
         # #The game screen
         plains_tile = pygame.image.load(os.path.join('graphics', 'plains_tile_32x32.png')).convert()
+        border_tile = pygame.image.load(os.path.join('graphics', 'edge_tile_32x32.png')).convert()
         self.tiles = [plains_tile]*100
-        menu_margin = width#*.75
-        self.game_plane = planes.Plane("game screen", Rect(0, 0, menu_margin, height))
+        menu_margin = height
+        self.game_plane = planes.Plane("game screen", Rect(0, 0, self.screenSize[0], self.screenSize[1]))
         self.game_background = tile_texture(self.game_plane.image, self.tiles)
+        for x in range(0, self.screenSize[0]+32*2, 32):
+            self.game_background.blit(border_tile, (x, 0))
+
+            self.game_background.blit(border_tile, (x, self.screenSize[1]-30-32))
+        for y in range(0, self.screenSize[1]-30, 32):
+            self.game_background.blit(border_tile, (0, y))
+            self.game_background.blit(border_tile, (self.screenSize[0]-32, y))
         self.game_plane.image.blit(self.game_background, (0,0))
+
         self.screen.sub(self.game_plane)
         
         #The main status display - Date and player $$
