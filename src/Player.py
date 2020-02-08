@@ -18,7 +18,7 @@
 #
 #     Work started on 19 December, 2019
 
-
+import Cities
 
 class Player(object):
     """Player with units"""
@@ -33,11 +33,21 @@ class Player(object):
 
     def assign_city(self, city, build_unit=True):
         """assign a city to the player"""
+        if city.owner:
+            city.owner.cities.remove(city)
+            for u in city.owner.units.copy():
+                if u.coords == city.coords:
+                    u.owner.units.remove(defender)
+                    u.plane.destroy()
+                    u.plane = None
+
         self.cities.append(city)
         city.owner = self
         city.set_image(self.color)
         if build_unit:
             city.start_building()
+        else:
+            city.building = Cities.not_building
 
     def assign_unit(self, unit):
         """assign a unit to the player"""
