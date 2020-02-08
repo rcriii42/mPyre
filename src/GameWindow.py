@@ -25,7 +25,7 @@ from pygame.locals import Rect
 from pygame.locals import QUIT, MOUSEMOTION, MOUSEBUTTONDOWN, MOUSEBUTTONUP
 from pygame.locals import KEYDOWN, K_UP, K_DOWN, K_LEFT, K_RIGHT
 from pygame.locals import K_KP1, K_KP2, K_KP3, K_KP4, K_KP6, K_KP7, K_KP8, K_KP9
-from pygame.locals import K_n
+from pygame.locals import K_n, K_END
 from GraphicUtils import tile_texture
 import planes
 import planes.gui
@@ -338,6 +338,8 @@ class GameWindow(object):
                         self.selected = controller.G.current_player.next_to_move()
                 elif last_key_down.key in [K_n]:
                     self.selected = controller.G.current_player.next_to_move(self.selected)
+                elif last_key_down.key in [K_END]:
+                    self.next_turn()
 
             # # if drag_dredge:
             # #     if last_mouse_up:
