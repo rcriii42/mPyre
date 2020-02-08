@@ -61,6 +61,8 @@ class Game(object):
         self.players[1].assign_city(possible_cities[-1])
         self.players[1].assign_unit(Infantry(coords=(possible_cities[-1].coords[0],
                                                      possible_cities[-1].coords[1])))
+        self.players[1].AI = AI(self.players[1],
+                                self)
 
         c = random.sample(possible_cities[1:3], 1)[0]
         self.players[2].assign_city(c)
