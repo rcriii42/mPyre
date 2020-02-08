@@ -24,6 +24,14 @@ import random
 from Cities import City
 from GroundUnits import Infantry
 
+try:
+    _choices = random.choices
+except AttributeError:
+    print("Using user-defined choices")
+    import choices
+    _choices = choices.choices
+
+
 class AI():
     """An AI to control a player"""
     def __init__(self, player, game):
@@ -75,7 +83,7 @@ class AI():
     def select_target(self, unit):
         """Select a target randomly from the """
         targets = self.find_targets(unit)
-        return random.choices(targets[0][:5], weights=targets[1][:5])[0]
+        return _choices(targets[0][:5], weights=targets[1][:5])[0]
 
     def find_targets(self, unit):
         """Rank targets for the given unit"""
