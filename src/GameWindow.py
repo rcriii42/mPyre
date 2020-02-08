@@ -139,15 +139,16 @@ class GameWindow(object):
         border_tile = pygame.image.load(os.path.join('graphics', 'edge_tile_32x32.png')).convert()
         self.tiles = [plains_tile]*100
         menu_margin = height
-        self.game_plane = planes.Plane("game screen", Rect(0, 0, self.screenSize[0], self.screenSize[1]))
-        self.game_background = tile_texture(self.game_plane.image, self.tiles)
+        blit_rect = pygame.Rect((0,0), (width + 32*2, height + 32*2))
+        self.game_plane = planes.Plane("game screen", Rect(0, 0, self.screenSize[0], self.screenSize[1]-30))
+        self.game_background = tile_texture(self.game_plane.image, self.tiles, blit_rect)
         for x in range(0, self.screenSize[0]+32*2, 32):
             self.game_background.blit(border_tile, (x, 0))
-
             self.game_background.blit(border_tile, (x, self.screenSize[1]-30-32))
         for y in range(0, self.screenSize[1]-30, 32):
             self.game_background.blit(border_tile, (0, y))
             self.game_background.blit(border_tile, (self.screenSize[0]-32, y))
+
         self.game_plane.image.blit(self.game_background, (0,0))
 
         self.screen.sub(self.game_plane)
