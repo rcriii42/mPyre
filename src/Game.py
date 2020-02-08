@@ -25,6 +25,7 @@ from Cities import City
 from Player import Player
 from GroundUnits import Infantry
 from Player_AI import AI
+from  BaseObjects import Map
 
 Demo = True
 
@@ -74,6 +75,9 @@ class Game(object):
         self.player_turn_list = self.players.copy()
 
         self.lost_players = []
+
+        self.map = Map(dims = size)
+
 
     @property
     def units(self):
