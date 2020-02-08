@@ -23,10 +23,11 @@ import Game
 
 class World(object):
     """ global controller construct"""
-    def __init__(self):
+    def __init__(self, size):
         self.id=random.randint(101,1001)
         self.end = False
-        self.G = Game.Game()
+
+        self.G = Game.Game(size)
         self.history = {}
     
     def quit(self):

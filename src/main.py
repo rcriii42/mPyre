@@ -23,7 +23,8 @@ from GameWindow import GameWindow
 
 
 if __name__ == "__main__":
-    GW = GameWindow()
-    W = Controller.World()
+    size = (32*30, 32*30)
+    GW = GameWindow(height=size[1], width=size[0])
+    W = Controller.World(size)
     GW.mainloop(W)
     GW.quit()

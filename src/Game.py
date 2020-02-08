@@ -36,7 +36,7 @@ def comprehension_flatten(iter_lst):
 class Game(object):
     """Holds the various game objects"""
 
-    def __init__(self):
+    def __init__(self, size):
         self.turn = 1
 
         possible_cities = [City("Boston", (17*32, 32)),
