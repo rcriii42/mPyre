@@ -75,6 +75,23 @@ class Unit(object):
         print("check_collision: No collision")
         return None
 
+    def distance_to(self, unit):
+        """Calculate the distance to the given unit"""
+        return max(abs(self.coords[0] - unit.coords[0]),
+                   abs(self.coords[1] - unit.coords[1]))
+
+    def direction_to(self, unit):
+        """return the unit vector to the given unit"""
+        if unit.coords[0] == self.coords[0]:
+            x_dir = 0
+        else:
+            x_dir = (unit.coords[0] - self.coords[0]) / abs(unit.coords[0] - self.coords[0])
+        if unit.coords[1] == self.coords[1]:
+            y_dir = 0
+        else:
+            y_dir = (unit.coords[1] - self.coords[1]) / abs(unit.coords[1] - self.coords[1])
+        return x_dir, y_dir
+
 
 class Map(object):
     """Map - meta object"""
