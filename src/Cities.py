@@ -64,4 +64,5 @@ class City(Unit):
     def start_building(self):
         """Start building a unit"""
         self.building = GroundUnits.Infantry(coords=self.coords)
+        self.building.owner = self.owner
         self.time_to_build = self.building.build_time
