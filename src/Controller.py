@@ -99,7 +99,6 @@ class World(object):
                 else:
                     #A unit is destroyed
                     print("resolve_combat: {} defeated {}".format(attacker.name, defender.name))
-                    attacker.coords = defender.coords
                     defender.owner.units.remove(defender)
                     defender.plane.destroy()
                     defender.plane = None
