@@ -59,8 +59,10 @@ class Player(object):
         if not u:
             if self.units:
                 u = self.units[0]
-            if u.moved < u.move_speed:
-                return u
+                if u.moved < u.move_speed:
+                    return u
+            else:
+                return None
         if u in self.units:
             i = self.units.index(u)
             after = [a for a in self.units[i:]]
