@@ -262,11 +262,18 @@ class GameWindow(object):
         drag_dredge = False
         while controller.end != True:
             self.update(controller.G)
+            self.next_message = None
+            last_mouse_move = None
+            last_mouse_down = None
+            last_mouse_up = None
+            last_key_down = None
             if controller.G.current_player.AI:
                 print("AI for {} taking turn.".format(controller.G.current_player.name))
                 msgs = controller.G.current_player.AI.next_move()
                 if 'End Turn' in msgs:
                   self.next_turn()
+                elif 'move' in msgs:
+                    last_key_down = msgs[2]
                 pygame.event.clear()
 
             # for m in messages:
@@ -277,11 +284,7 @@ class GameWindow(object):
             #Check events
             event_list = pygame.event.get()
             self.screen.process(event_list) #Let planes go first
-            self.next_message=None
-            last_mouse_move = None
-            last_mouse_down = None
-            last_mouse_up = None
-            last_key_down = None
+
             for e in event_list:
                 if e.type == QUIT:
                     controller.quit()
@@ -291,7 +294,7 @@ class GameWindow(object):
                     last_mouse_down = e
                 elif e.type == MOUSEBUTTONUP:# and drag_dredge:
                     last_mouse_up = e
-                elif e.type == KEYDOWN:
+                elif e.type == KEYDOWN and last_key_down is None:
                     last_key_down = e
             if last_mouse_move:
                 #self.next_message = "Moved to: {}".format(last_mouse_move.pos)
