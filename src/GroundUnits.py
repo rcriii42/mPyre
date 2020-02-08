@@ -32,11 +32,14 @@ class unit_namer:
         self.unit_num = 1
 
     def name_unit(self):
-        if self.unit_num in [1]:
+        suffixed = [1] + [x for x in range(21, 101, 10)]
+        for c in range(100, 10000, 100):
+            suffixed += [x for x in range(c + 21, c + 101, 10)]
+        if self.unit_num in suffixed:
             suffix = "st"
-        elif self.unit_num in [2]:
+        elif self.unit_num in [x + 1 for x in suffixed]:
             suffix = "nd"
-        elif self.unit_num in [3]:
+        elif self.unit_num in [x + 2 for x in suffixed]:
             suffix = "rd"
         else:
             suffix = "th"
