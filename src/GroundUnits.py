@@ -124,6 +124,9 @@ class Infantry(Unit):
             return None
 
     def turn_step(self, G):
+        if self.plane:
+            if self.coords != (self.plane.rect.left, self.plane.rect.top):
+                print("{} Coordinate mismatch {} != {}".format(self.name, self.coords, (self.plane.rect.left, self.plane.rect.top)))
         turn_messages = ["{} turn {} moved {}".format(self.name, G.turn, self.moved)]
         self.moved = 0
         return turn_messages
