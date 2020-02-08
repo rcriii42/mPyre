@@ -29,6 +29,10 @@ class World(object):
 
         self.G = Game.Game(size)
         self.history = {}
+
+    @property
+    def size(self):
+        return self.G.size
     
     def quit(self):
         self.end = True
