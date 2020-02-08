@@ -72,7 +72,7 @@ class Unit(object):
             if u.coords == coords:
                 "check_collision: collided with {}".format(u.name)
                 return u
-        print("check_collision: No collision")
+        print("check_collision: No collision {}".format(coords))
         return None
 
     def distance_to(self, unit):
