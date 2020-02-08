@@ -74,13 +74,13 @@ class AI():
     def move_unit(self, target):
         """Move the moving_unit towards the target if it can"""
         dir = self.moving_unit.direction_to(target)
+        new_coords = (self.moving_unit.coords[0]+dir[0]*self.moving_unit.image_size[0],
+                      self.moving_unit.coords[1]+dir[1]*self.moving_unit.image_size[1])
         while True:
-            u = self.moving_unit.check_collision((self.moving_unit.coords[0]+dir[0]*self.moving_unit.image_size[0],
-                                                  self.moving_unit.coords[1]+dir[1]*self.moving_unit.image_size[1]),
-                                                 self.game)
+            u = self.moving_unit.check_collision(new_coords, self.game)
             if isinstance(u, City):
                 break
-            elif isinstance(u, Unit):
+            elif isinstance(u, Unit) or self.game.map[new_coords] in self.moving_unit.connot_enter:
                 if self.moving_unit.owner is u.owner:
                     dir = {( 0,  1): ( 1,  1),  #adjust movement clockwise
                            ( 1,  1): ( 1,  0),
