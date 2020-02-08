@@ -273,7 +273,7 @@ class GameWindow(object):
                 if 'End Turn' in msgs:
                   self.next_turn()
                 elif 'move' in msgs:
-                    last_key_down = msgs[2]
+                    last_key_down = pygame.event.Event(pygame.KEYDOWN, key=msgs[2], mod=0)
                 pygame.event.clear()
 
             # for m in messages:
