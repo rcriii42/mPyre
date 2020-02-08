@@ -20,11 +20,15 @@
 
 import Controller
 from GameWindow import GameWindow
+import pygame
 
 
 if __name__ == "__main__":
     size = (32*25, 32*25)
-    GW = GameWindow(height=size[1], width=size[0])
+    pygame.init()
+    pygame.display.set_mode(size)
     W = Controller.World(size)
-    GW.mainloop(W)
+    GW = GameWindow(W)
+
+    GW.mainloop()
     GW.quit()
