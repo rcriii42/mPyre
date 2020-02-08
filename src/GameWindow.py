@@ -119,15 +119,15 @@ class GameWindow(object):
     """
     GameWindow - Class to wrap the graphical display for the game.
     """
-    def __init__(self, width=32*25, height=32*20, timeScale=1):
-        
+    def __init__(self, controller, timeScale=1):
+        self.controller = controller
         self.max_frame_rate = 10    #max frame rate in frames-per-second
         self.clock = pygame.time.Clock()
-        
+
         pygame.init()
-        self.screenSize = width + 32*2, height + 32*2 + 30
+        self.screenSize = controller.size[0] + 32*2, controller.size[1] + 32*2 + 30
         self.w32windowClass = "pygame"  #The win32 window class for this object
-        self.screen = planes.Display(self.screenSize) #pygame.display.set_mode(self.screenSize)
+        self.screen = planes.Display(self.screenSize)
         self.windowCaption = "mPyre"
         pygame.display.set_caption(self.windowCaption)        
         self.white = pygame.Color("white")
@@ -138,10 +138,8 @@ class GameWindow(object):
         plains_tile = pygame.image.load(os.path.join('graphics', 'plains_tile_32x32.png')).convert()
         border_tile = pygame.image.load(os.path.join('graphics', 'edge_tile_32x32.png')).convert()
         self.tiles = [plains_tile]*100
-        menu_margin = height
-        blit_rect = pygame.Rect((0,0), (width + 32*2, height + 32*2))
         self.game_plane = planes.Plane("game screen", Rect(0, 0, self.screenSize[0], self.screenSize[1]-30))
-        self.game_background = tile_texture(self.game_plane.image, self.tiles, blit_rect)
+        self.game_background = tile_texture(self.game_plane.image, self.tiles)
         for x in range(0, self.screenSize[0]+32*2, 32):
             self.game_background.blit(border_tile, (x, 0))
             self.game_background.blit(border_tile, (x, self.screenSize[1]-30-32))
@@ -198,8 +196,9 @@ class GameWindow(object):
         else:
             pass
 
-    def update(self, game):
+    def update(self):
         """update - update the game window"""
+        game = self.controller.G
         self.game_plane.image.blit(self.game_background, (0,0)) #reset background drawing
         for c in game.cities:
             if not c.plane:
@@ -267,19 +266,18 @@ class GameWindow(object):
         self.selected = None
         self.advance_turn = True
 
-    def mainloop(self, controller):
+    def mainloop(self):
         """The mainloop for the game, expects a controller to manage the game objects"""
-        drag_dredge = False
-        while controller.end != True:
-            self.update(controller.G)
+        while self.controller.end != True:
+            self.update()
             self.next_message = None
             last_mouse_move = None
             last_mouse_down = None
             last_mouse_up = None
             last_key_down = None
-            if controller.G.current_player.AI:
-                print("AI for {} taking turn.".format(controller.G.current_player.name))
-                msgs = controller.G.current_player.AI.next_move()
+            if self.controller.G.current_player.AI:
+                print("AI for {} taking turn.".format(self.controller.G.current_player.name))
+                msgs =self.controller.G.current_player.AI.next_move()
                 if 'End Turn' in msgs:
                   self.next_turn()
                 elif 'move' in msgs:
@@ -297,7 +295,7 @@ class GameWindow(object):
 
             for e in event_list:
                 if e.type == QUIT:
-                    controller.quit()
+                    self.controller.quit()
                 elif e.type == MOUSEMOTION:
                     last_mouse_move = e
                 elif e.type == MOUSEBUTTONDOWN:
@@ -317,16 +315,16 @@ class GameWindow(object):
                     self.city_bubble.destroy()
                     self.city_bubble = None
                 #self.next_message = "Mouse click: %s %s"%(`last_mouse_down.pos`, `last_mouse_down.button`)
-                for c in controller.G.cities:
+                for c in self.controller.G.cities:
                     #did we click on a city?
                     if c.plane.rect.collidepoint(last_mouse_down.pos):
                         self.next_message =  "clicked on city of %s"%c.name
                         self.selected = c
 
-                for u in controller.G.units:
+                for u in self.controller.G.units:
                     #How about a unit?
                     if u.plane.rect.collidepoint(last_mouse_down.pos):
-                        if u.owner is controller.G.current_player:
+                        if u.owner is self.controller.G.current_player:
                             self.next_message = "selected {}".format(u.name)
                             self.selected = u
                         else:
@@ -340,14 +338,14 @@ class GameWindow(object):
                     last_key_down.key in [K_UP, K_DOWN, K_LEFT, K_RIGHT,
                                           K_KP1, K_KP2, K_KP3, K_KP4,
                                           K_KP6, K_KP7, K_KP8, K_KP9]:
-                    self.selected = controller.move_unit(self.selected, last_key_down.key)
+                    self.selected =self.controller.move_unit(self.selected, last_key_down.key)
                     if self.selected:
                         if self.selected.moved >= self.selected.move_speed:
                             self.selected = self.selected.owner.next_to_move(self.selected)
                     else:
-                        self.selected = controller.G.current_player.next_to_move()
+                        self.selected =self.controller.G.current_player.next_to_move()
                 elif last_key_down.key in [K_n]:
-                    self.selected = controller.G.current_player.next_to_move(self.selected)
+                    self.selected =self.controller.G.current_player.next_to_move(self.selected)
                 elif last_key_down.key in [K_END]:
                     self.next_turn()
 
@@ -362,16 +360,16 @@ class GameWindow(object):
             
             #move on with our lives
             if self.advance_turn:
-                msgs = controller.step()
+                msgs = self.controller.step()
                 print("\n".join(msgs))
                 for m in msgs:
                     if "lost!" in m:
                         print(m)
                     if "won!" in m:
                         print(m)
-                self.update(controller.G)
-                if controller.G.current_player.units:
-                    self.selected = controller.G.current_player.units[0]
+                self.update()
+                if self.controller.G.current_player.units:
+                    self.selected = self.controller.G.current_player.units[0]
                 self.advance_turn = False
             pygame.event.clear()
             if self.next_message: print(self.next_message)
