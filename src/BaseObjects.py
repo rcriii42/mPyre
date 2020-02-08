@@ -99,10 +99,17 @@ class Map(object):
     def __init__(self, name='The Map', dims=(10,10)):
         self.name = name
         self.dims = dims
+        self.terrain ={}
+
 
     def __getitem__(self, item):
-        'only accept spaces or lists of spaces'
-        if type(item)==list:
-            pass
-
+        if type(item) is not type(self.dims):
+            raise TypeError("Invalid type for map coords: {}".format(item))
+        if item[0] > self.dims[0] or item[1] > self.dims[1]:
+            raise KeyError("Coordinates out of bounds: {}".format(item))
+        if item[0] < 0 or item[1] < 0:
+            raise KeyError("Coordinates out of bounds: {}".format(item))
+        if item[0] in (0, self.dims[0]) or item[1] in (0, self.dims[1]):
+            return "border"
+        return self.terrain.get(item, "plains")
 
