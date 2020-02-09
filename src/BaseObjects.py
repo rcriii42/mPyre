@@ -27,7 +27,7 @@ import os
 import pygame
 from GraphicUtils import colors
 
-class unit_namer:
+class Namer:
     """class to manage unit names"""
     def __init__(self):
         self.unit_num = 1
