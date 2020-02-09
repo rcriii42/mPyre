@@ -125,7 +125,7 @@ class GameWindow(object):
         self.clock = pygame.time.Clock()
 
         pygame.init()
-        self.screenSize = controller.size[0] + 32*2, controller.size[1] + 32*2 + 30
+        self.screenSize = controller.size[0] + 32*2 + 12, 32*25 + 32*2 + 30
         self.w32windowClass = "pygame"  #The win32 window class for this object
         self.screen = planes.Display(self.screenSize)
         self.windowCaption = "mPyre"
@@ -133,27 +133,32 @@ class GameWindow(object):
         self.white = pygame.Color("white")
         self.screen.image.fill(self.white)
         pygame.display.flip()
+
         
         # #The game screen
         plains_tile = pygame.image.load(os.path.join('graphics', 'plains_tile_32x32.png')).convert()
         border_tile = pygame.image.load(os.path.join('graphics', 'edge_tile_32x32.png')).convert()
         sea_tile = pygame.image.load(os.path.join('graphics', 'sea_tile_32x32.png')).convert()
         self.tiles = [plains_tile]*100
-        self.game_plane = planes.Plane("game screen", Rect(0, 0, self.screenSize[0], self.screenSize[1]-30))
+        self.game_plane = planes.Plane("game screen", Rect(0, 0, controller.size[0]+ 32*2, controller.size[1]+ 32*2))
+
         self.game_background = tile_texture(self.game_plane.image, self.tiles)
-        for x in range(0, self.screenSize[0]+32*2, 32):
+        for x in range(0, controller.size[0]+ 32*2, 32):
             self.game_background.blit(border_tile, (x, 0))
-            self.game_background.blit(border_tile, (x, self.screenSize[1]-30-32))
-        for y in range(0, self.screenSize[1]-30, 32):
+            self.game_background.blit(border_tile, (x, controller.size[1]+ 32))
+        for y in range(0, controller.size[1]+ 32*2, 32):
             self.game_background.blit(border_tile, (0, y))
-            self.game_background.blit(border_tile, (self.screenSize[0]-32, y))
+            self.game_background.blit(border_tile, (controller.size[0]+ 32, y))
         M = self.controller.G.map
         for xy, terrain in M.items():
             self.game_background.blit(sea_tile, xy)
 
         self.game_plane.image.blit(self.game_background, (0,0))
 
-        self.screen.sub(self.game_plane)
+        scroller = planes.gui.ScrollingPlane("scroller",
+                                             Rect(0, 0, self.screenSize[0]-12, self.screenSize[1] - 30),
+                                             self.game_plane)
+        self.screen.sub(scroller)
         
         #The main status display - Date and player $$
         self.turn_status = planes.gui.Button("Turn: 1",

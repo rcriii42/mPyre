@@ -24,7 +24,7 @@ import pygame
 
 
 if __name__ == "__main__":
-    size = (32*25, 32*25)
+    size = (32*50, 32*50)
     pygame.init()
     pygame.display.set_mode(size)
     W = Controller.World(size)
