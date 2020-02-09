@@ -93,14 +93,12 @@ class Unit(object):
         return x_dir, y_dir
 
 
-class Map(object):
+class Map(dict):
     """Map - meta object"""
 
     def __init__(self, name='The Map', dims=(10,10)):
         self.name = name
         self.dims = dims
-        self.terrain ={}
-
 
     def __getitem__(self, key):
         if type(key) is not type(self.dims):
@@ -111,7 +109,7 @@ class Map(object):
             raise KeyError("Coordinates out of bounds: {}".format(key))
         if key[0] in (0, self.dims[0]) or key[1] in (0, self.dims[1]):
             return "edge"
-        return self.terrain.get(key, "plains")
+        return self.get(key, "plains")
 
     def __setitem__(self, key, value):
         if type(key) is not type(self.dims):
@@ -120,5 +118,7 @@ class Map(object):
             raise KeyError("Coordinates out of bounds: {}".format(key))
         if key[0] < 0 or key[1] < 0:
             raise KeyError("Coordinates out of bounds: {}".format(key))
-        self.terrain[key] = value
+        super(Map, self).__setitem__(key, value)
+
+
 
