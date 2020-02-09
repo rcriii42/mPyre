@@ -82,7 +82,7 @@ class AI():
                 break
             elif isinstance(u, Unit) or self.game.map[new_coords] in self.moving_unit.connot_enter:
                 if self.moving_unit.owner is u.owner:
-                    dir = {( 0,  1): ( 1,  1),  #adjust movement clockwise
+                    new_dir = {( 0,  1): ( 1,  1),  #adjust movement clockwise
                            ( 1,  1): ( 1,  0),
                            ( 1,  0): ( 1, -1),
                            ( 1, -1): ( 0, -1),
@@ -90,6 +90,10 @@ class AI():
                            (-1, -1): (-1,  0),
                            (-1,  0): (-1,  1),
                            (-1,  1): ( 0,  1)}[dir]
+                    new_coords = (self.moving_unit.coords[0] + new_dir[0] * self.moving_unit.image_size[0],
+                                  self.moving_unit.coords[1] + new_dir[1] * self.moving_unit.image_size[1])
+                    print("move unit found collision {} {}".format(dir, new_dir))
+                    dir = new_dir
                 else:
                     break
             else:
