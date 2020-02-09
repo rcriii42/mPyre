@@ -20,38 +20,12 @@
 
 
 import os
-from BaseObjects import Unit
+from BaseObjects import Unit, unit_namer
 from pygame.locals import K_UP, K_DOWN, K_LEFT, K_RIGHT
 from pygame.locals import K_KP1, K_KP2, K_KP3, K_KP4, K_KP6, K_KP7, K_KP8, K_KP9
 import random
 import Cities
 
-class unit_namer:
-    """class to manage unit names"""
-    def __init__(self):
-        self.unit_num = 1
-
-    def name_unit(self):
-        suffixed = [1] + [x for x in range(21, 101, 10)]
-        for c in range(100, 10000, 100):
-            suffixed += [x for x in range(c + 21, c + 101, 10)]
-        if self.unit_num in suffixed:
-            suffix = "st"
-        elif self.unit_num in [x + 1 for x in suffixed]:
-            suffix = "nd"
-        elif self.unit_num in [x + 2 for x in suffixed]:
-            suffix = "rd"
-        else:
-            suffix = "th"
-        name = "{}{} {}".format(self.unit_num,
-                                suffix,
-                                random.choice(["Infantry",
-                                               "Grenadiers",
-                                               "Halbardiers",
-                                               "Guards",
-                                               "Marines"]))
-        self.unit_num += 1
-        return name
 
 namer = unit_namer()
 
