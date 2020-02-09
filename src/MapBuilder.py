@@ -40,7 +40,7 @@ city_namer = Namer(name_list=city_name_list, number_names=False)
 
 def map_builder(size, numcities=10, numwater=3, squaresize=32):
     """Generate a map in the given game"""
-    map = Map(dims=size)
+    map = Map(dims=size, squaresize=squaresize)
     map, cities = add_cities(map, numcities, squaresize)
     for i in range(numwater):
         map = add_water(map, squaresize)
@@ -60,12 +60,25 @@ def add_water(map, squaresize, min_dia=3):
     water_to_check = [base_coords]
     for x in range(0, min_dia*squaresize, squaresize):
         for y in range(0, min_dia*squaresize, squaresize):
-            coords = (x + base_coords[0] - int(min_dia/2),
-                      y + base_coords[1] - int(min_dia/2))
-            print("{} {}".format(coords, map[coords]))
-            if map[coords] == "plains":
-                map[coords] = "water"
-                water_to_check.append(coords)
+            coords = (x + base_coords[0] - int(min_dia/2)*squaresize,
+                      y + base_coords[1] - int(min_dia/2)*squaresize)
+            if 0<coords[0]<map.dims[0] and 0<coords[1]<map.dims[1]:
+                if map[coords] == "plains":
+                    map[coords] = "water"
+                    water_to_check.append(coords)
+    checked = []
+    while len(water_to_check) > 0:
+        sq = water_to_check.pop()
+        print("checking {} {}".format(sq, map[sq]))
+        for n in [x for x in map.neighbors(sq) if map[x]=='plains' and x not in checked.copy()]:
+            print("checking {} {}, neighbor of {}, {}".format(n, map[n], sq, map[sq]))
+            num_plains = sum(1 for ne in map.neighbors(n) if map[ne]=='plains')
+            if num_plains > 0:
+                chance_water = 2 / num_plains
+                if random.random() < chance_water:
+                    map[n] = 'water'
+                    water_to_check.append(n)
+            checked.append(n)
     return map
 
 
