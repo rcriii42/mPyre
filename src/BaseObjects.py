@@ -26,11 +26,20 @@ Map - a dictionary holding all the spaces on a map
 import os
 import pygame
 from GraphicUtils import colors
+import random
+
+infantry_list = ["Infantry",
+                 "Grenadiers",
+                 "Halbardiers",
+                 "Guards",
+                 "Marines"]
 
 class Namer:
     """class to manage unit names"""
-    def __init__(self):
+    def __init__(self, name_list=None):
         self.unit_num = 1
+        if not name_list:
+            name_list = infantry_list
 
     def name_unit(self):
         suffixed = [1] + [x for x in range(21, 101, 10)]
@@ -46,11 +55,7 @@ class Namer:
             suffix = "th"
         name = "{}{} {}".format(self.unit_num,
                                 suffix,
-                                random.choice(["Infantry",
-                                               "Grenadiers",
-                                               "Halbardiers",
-                                               "Guards",
-                                               "Marines"]))
+                                random.choice(name_list))
         self.unit_num += 1
         return name
 
