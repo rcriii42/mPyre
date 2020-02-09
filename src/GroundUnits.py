@@ -71,6 +71,7 @@ class Infantry(Unit):
 
         self.moved = 0
         self.move_speed = 1
+        self.connot_enter = ['edge', 'water']
 
         self.max_strength = 1
         self.current_strength = 1  # How much damage the unit can take
@@ -107,6 +108,9 @@ class Infantry(Unit):
             return None
         new_coords = (self.coords[0]+ move_vector[0],
                       self.coords[1] + move_vector[1])
+        if G.map[new_coords] in self.connot_enter :
+            print("{} cannot move into {}".format(self.name, G.map[new_coords]))
+            return None
         u = self.check_collision(new_coords, G)
         if not u:
             self.coords = new_coords
