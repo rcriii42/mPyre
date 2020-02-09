@@ -152,9 +152,10 @@ class Unit(object):
 class Map(dict):
     """Map - meta object"""
 
-    def __init__(self, name='The Map', dims=(10,10)):
+    def __init__(self, name='The Map', dims=(10,10), squaresize=32):
         self.name = name
         self.dims = dims
+        self.squaresize = squaresize
 
     def __getitem__(self, key):
         if type(key) is not type(self.dims):
@@ -175,6 +176,18 @@ class Map(dict):
         if key[0] < 0 or key[1] < 0:
             raise KeyError("Coordinates out of bounds: {}".format(key))
         super(Map, self).__setitem__(key, value)
+
+    def neighbors(self, xy):
+        """Return a list of coordinates of the neighbors of the given square"""
+        ne_list = []
+        for x in [-1, 0, 1]:
+            for y in [-1, 0, 1]:
+                if (x, y) != (0, 0) and \
+                   (0<=xy[0] + x*self.squaresize<=self.dims[0]) and \
+                   (0<=xy[1] + y*self.squaresize<=self.dims[1]):
+                    ne_list.append((xy[0] + x*self.squaresize,
+                                    xy[1] + y*self.squaresize))
+        return ne_list
 
 
 
