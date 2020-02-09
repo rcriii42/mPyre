@@ -36,12 +36,35 @@ infantry_list = ["Infantry",
 
 class Namer:
     """class to manage unit names"""
-    def __init__(self, name_list=None):
+    def __init__(self, name_list=None, number_names=True):
         self.unit_num = 1
         if not name_list:
-            name_list = infantry_list
+            self.original_name_list = infantry_list.copy()
+            self.name_list = infantry_list.copy()
+        else:
+            self.original_name_list = name_list.copy()
+            self.name_list = name_list.copy()
+            random.shuffle(self.name_list)
+        if number_names:
+            self.name_unit = self.name_numbered_unit
+        else:
+            self.name_unit = self.name_unnumbered_unit
 
-    def name_unit(self):
+
+    def name_unnumbered_unit(self):
+        """Name units in the case they are unnumbered
+
+        selects from the name_list without replacement"""
+        if len(self.name_list) > 0:
+            return self.name_list.pop()
+        else:
+            print("Out of names!")
+            self.name_list = self.original_name_list
+            self.name_unit = self.name_numbered_unit()
+            return self.name_unit()
+
+
+    def name_numbered_unit(self):
         suffixed = [1] + [x for x in range(21, 101, 10)]
         for c in range(100, 10000, 100):
             suffixed += [x for x in range(c + 21, c + 101, 10)]
@@ -55,7 +78,7 @@ class Namer:
             suffix = "th"
         name = "{}{} {}".format(self.unit_num,
                                 suffix,
-                                random.choice(name_list))
+                                random.choice(self.name_list))
         self.unit_num += 1
         return name
 
