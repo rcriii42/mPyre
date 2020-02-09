@@ -137,6 +137,7 @@ class GameWindow(object):
         # #The game screen
         plains_tile = pygame.image.load(os.path.join('graphics', 'plains_tile_32x32.png')).convert()
         border_tile = pygame.image.load(os.path.join('graphics', 'edge_tile_32x32.png')).convert()
+        sea_tile = pygame.image.load(os.path.join('graphics', 'sea_tile_32x32.png')).convert()
         self.tiles = [plains_tile]*100
         self.game_plane = planes.Plane("game screen", Rect(0, 0, self.screenSize[0], self.screenSize[1]-30))
         self.game_background = tile_texture(self.game_plane.image, self.tiles)
@@ -146,6 +147,9 @@ class GameWindow(object):
         for y in range(0, self.screenSize[1]-30, 32):
             self.game_background.blit(border_tile, (0, y))
             self.game_background.blit(border_tile, (self.screenSize[0]-32, y))
+        M = self.controller.G.map
+        for xy, terrain in M.items():
+            self.game_background.blit(sea_tile, xy)
 
         self.game_plane.image.blit(self.game_background, (0,0))
 
