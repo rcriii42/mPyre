@@ -60,7 +60,7 @@ class Namer:
         else:
             print("Out of names!")
             self.name_list = self.original_name_list
-            self.name_unit = self.name_numbered_unit()
+            self.name_unit = self.name_numbered_unit
             return self.name_unit()
 
 
