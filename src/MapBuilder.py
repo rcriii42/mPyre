@@ -69,9 +69,9 @@ def add_water(map, squaresize, min_dia=3):
     checked = []
     while len(water_to_check) > 0:
         sq = water_to_check.pop()
-        print("checking {} {}".format(sq, map[sq]))
+        #print("checking {} {}".format(sq, map[sq]))
         for n in [x for x in map.neighbors(sq) if map[x]=='plains' and x not in checked.copy()]:
-            print("checking {} {}, neighbor of {}, {}".format(n, map[n], sq, map[sq]))
+            #print("checking {} {}, neighbor of {}, {}".format(n, map[n], sq, map[sq]))
             num_plains = sum(1 for ne in map.neighbors(n) if map[ne] in ['plains', 'edge', 'city'])
             if num_plains > 0:
                 chance_water = 2 / num_plains
