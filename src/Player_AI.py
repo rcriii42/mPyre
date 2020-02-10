@@ -28,7 +28,7 @@ from GroundUnits import Infantry
 try:
     _choices = random.choices
 except AttributeError:
-    print("Using user-defined choices")
+    #print("Using user-defined choices")
     import choices
     _choices = choices.choices
 
@@ -57,15 +57,15 @@ class AI():
         self.moving_unit = self.player.next_to_move()
         if self.moving_unit and not self.moving_unit_selected:
             self.moving_unit_selected = True
-            print("{} selected".format(self.moving_unit.name))
+            #print("{} selected".format(self.moving_unit.name))
             return ['select', self.moving_unit]
         elif self.moving_unit:
             t = self.select_target(self.moving_unit)
             dir, key = self.move_unit(t)
 
-            print("{} target is {}, moving {}".format(self.moving_unit.name,
-                                                      t.name,
-                                                      dir))
+            # print("{} target is {}, moving {}".format(self.moving_unit.name,
+            #                                          t.name,
+            #                                           dir))
             return ['move', self.moving_unit, key]
         else:
             self.moving_unit_selected = False
@@ -92,7 +92,7 @@ class AI():
                            (-1,  1): ( 0,  1)}[dir]
                     new_coords = (self.moving_unit.coords[0] + new_dir[0] * self.moving_unit.image_size[0],
                                   self.moving_unit.coords[1] + new_dir[1] * self.moving_unit.image_size[1])
-                    print("move unit found collision {} {}".format(dir, new_dir))
+                    #print("move unit found collision {} {}".format(dir, new_dir))
                     dir = new_dir
                 else:
                     break
@@ -111,7 +111,7 @@ class AI():
     def select_target(self, unit):
         """Select a target randomly from the """
         targets = self.find_targets(unit)
-        print(unit.name, targets[:5])
+        #print(unit.name, targets[:5])
         return _choices(targets[0][:5], weights=targets[1][:5])[0]
 
     def find_targets(self, unit):

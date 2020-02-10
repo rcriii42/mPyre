@@ -93,7 +93,7 @@ class World(object):
             if defender.current_strength <= 0:
                 if defender in defender.owner.cities:
                     #A city changes hands
-                    print("resolve_combat: {} captured city of {}".format(attacker.name, defender.name))
+                    #print("resolve_combat: {} captured city of {}".format(attacker.name, defender.name))
                     attacker.owner.assign_city(defender)
                     defender.plane.destroy()
                     defender.plane = None
@@ -103,7 +103,7 @@ class World(object):
                     return False
                 else:
                     #A unit is destroyed
-                    print("resolve_combat: {} defeated {}".format(attacker.name, defender.name))
+                    #print("resolve_combat: {} defeated {}".format(attacker.name, defender.name))
                     defender.owner.units.remove(defender)
                     defender.plane.destroy()
                     defender.plane = None
@@ -112,7 +112,7 @@ class World(object):
             attacker.current_strength -= defender.defense
             if attacker.current_strength <= 0:
                 #Attacker destroyed
-                print("resolve_combat: {} defeated by {}".format(attacker.name, defender.name))
+                #print("resolve_combat: {} defeated by {}".format(attacker.name, defender.name))
                 attacker.owner.units.remove(attacker)
                 attacker.plane.destroy()
                 attacker.plane = None

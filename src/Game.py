@@ -40,13 +40,9 @@ player_namer = Namer(name_list=["Joe", "Svetlana", "Estefan", "Wang Xiu Ying"],
 def furthest_city(map, coords):
     """find the furthest city on the map from the given coordinates"""
     cities = [c[0] for c in map.items() if c[1]=="city"]
-    print(cities)
     distances = [max(abs(coords[0]-c[0]), abs(coords[1]-c[1])) for c in cities]
-    print(distances)
     z = [x for x in zip(cities, distances)]
-    print(z)
     so = sorted(z, key=lambda tup: tup[1])
-    print(so)
     return so[-1][0]
 
 class Game(object):

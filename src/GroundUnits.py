@@ -58,10 +58,10 @@ class Infantry(Unit):
         "Move one step in the given direction"
 
         if self.moved >= self.move_speed:
-            print("{} not moving {}, moved {}".format(self.name, self.move_speed, self.moved))
-            print("{}".format((self.moved < self.move_speed)))
+            #print("{} not moving {}, moved {}".format(self.name, self.move_speed, self.moved))
+            #print("{}".format((self.moved < self.move_speed)))
             return None
-        print("{} moving {}, moved {}".format(self.name, self.move_speed, self.moved))
+        #print("{} moving {}, moved {}".format(self.name, self.move_speed, self.moved))
         if direction in [K_UP, K_KP8]:
             move_vector = 0, -self.image_size[1]
         elif direction in [K_KP9]:
@@ -83,7 +83,7 @@ class Infantry(Unit):
         new_coords = (self.coords[0]+ move_vector[0],
                       self.coords[1] + move_vector[1])
         if G.map[new_coords] in self.connot_enter :
-            print("{} cannot move into {}".format(self.name, G.map[new_coords]))
+            #print("{} cannot move into {}".format(self.name, G.map[new_coords]))
             return None
         u = self.check_collision(new_coords, G)
         if not u:

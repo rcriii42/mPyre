@@ -125,7 +125,7 @@ class GameWindow(object):
         self.clock = pygame.time.Clock()
 
         pygame.init()
-        self.screenSize = controller.size[0] + 32*2 + 12, 32*25 + 32*2 + 30
+        self.screenSize = controller.size[0] + 32*2 + 12, 32*17 + 32*2 + 30
         self.w32windowClass = "pygame"  #The win32 window class for this object
         self.screen = planes.Display(self.screenSize)
         self.windowCaption = "mPyre"
@@ -285,7 +285,7 @@ class GameWindow(object):
             last_mouse_up = None
             last_key_down = None
             if self.controller.G.current_player.AI:
-                print("AI for {} taking turn.".format(self.controller.G.current_player.name))
+                #print("AI for {} taking turn.".format(self.controller.G.current_player.name))
                 msgs =self.controller.G.current_player.AI.next_move()
                 if 'End Turn' in msgs:
                   self.next_turn()

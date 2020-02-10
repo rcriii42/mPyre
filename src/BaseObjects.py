@@ -122,13 +122,13 @@ class Unit(object):
             coords = self.coords
         for c in G.cities:
             if c.coords == coords:
-                print("check_collision: collided with {}".format(c.name))
+                #print("check_collision: collided with {}".format(c.name))
                 return c
         for u in G.units:
             if u.coords == coords:
                 "check_collision: collided with {}".format(u.name)
                 return u
-        print("check_collision: No collision {}".format(coords))
+        #print("check_collision: No collision {}".format(coords))
         return None
 
     def distance_to(self, unit):
