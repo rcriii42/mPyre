@@ -24,10 +24,11 @@ import pygame
 
 
 if __name__ == "__main__":
-    size = (32*30, 32*30)
+    image_size = 32
+    size = (image_size*30, image_size*30)
     pygame.init()
     pygame.display.set_mode(size)
-    W = Controller.World(size)
+    W = Controller.World(size, image_size)
     GW = GameWindow(W)
 
     GW.mainloop()

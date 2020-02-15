@@ -48,10 +48,10 @@ def furthest_city(map, coords):
 class Game(object):
     """Holds the various game objects"""
 
-    def __init__(self, size):
+    def __init__(self, size, image_size):
         self.turn = 1
 
-        self.map, self.cities = MapBuilder.map_builder(size)
+        self.map, self.cities = MapBuilder.map_builder(size, squaresize=image_size)
 
         self.neutral = Player(name="Neutral", color = "white")
         for c in self.cities:

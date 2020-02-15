@@ -23,11 +23,12 @@ import Game
 
 class World(object):
     """ global controller construct"""
-    def __init__(self, size):
+    def __init__(self, size, image_size):
         self.id=random.randint(101,1001)
         self.end = False
+        self.image_size = image_size
 
-        self.G = Game.Game(size)
+        self.G = Game.Game(size, image_size)
         self.history = {}
 
     @property

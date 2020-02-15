@@ -125,7 +125,8 @@ class GameWindow(object):
         self.clock = pygame.time.Clock()
 
         pygame.init()
-        self.screenSize = controller.size[0] + 32*2 + 12, 32*17 + 32*2 + 30
+        self.screenSize = (controller.size[0] + controller.image_size*2 + 12,
+                           controller.image_size*17 + controller.image_size*2 + 30)
         self.w32windowClass = "pygame"  #The win32 window class for this object
         self.screen = planes.Display(self.screenSize)
         self.windowCaption = "mPyre"
@@ -140,15 +141,17 @@ class GameWindow(object):
         border_tile = pygame.image.load(os.path.join('graphics', 'edge_tile_32x32.png')).convert()
         sea_tile = pygame.image.load(os.path.join('graphics', 'sea_tile_32x32.png')).convert()
         self.tiles = [plains_tile]*100
-        self.game_plane = planes.Plane("game screen", Rect(0, 0, controller.size[0]+ 32*2, controller.size[1]+ 32*2))
+        self.game_plane = planes.Plane("game screen", Rect(0, 0, controller.size[0]+ controller.image_size*2,
+                                                           controller.size[1]+ controller.image_size*2))
 
         self.game_background = tile_texture(self.game_plane.image, self.tiles)
-        for x in range(0, controller.size[0]+ 32*2, 32):
+        #TODO: why not just blit based on the map? It knows about edges
+        for x in range(0, controller.size[0]+ controller.image_size*2, controller.image_size):
             self.game_background.blit(border_tile, (x, 0))
-            self.game_background.blit(border_tile, (x, controller.size[1]+ 32))
-        for y in range(0, controller.size[1]+ 32*2, 32):
+            self.game_background.blit(border_tile, (x, controller.size[1]+ controller.image_size))
+        for y in range(0, controller.size[1]+ controller.image_size*2, controller.image_size):
             self.game_background.blit(border_tile, (0, y))
-            self.game_background.blit(border_tile, (controller.size[0]+ 32, y))
+            self.game_background.blit(border_tile, (controller.size[0]+ controller.image_size, y))
         M = self.controller.G.map
         for xy, terrain in M.items():
             self.game_background.blit(sea_tile, xy)
@@ -197,8 +200,12 @@ class GameWindow(object):
         if isinstance(s, BaseObjects.Unit):
             self.show_city_status(s)
             img = s.plane.image.copy()
-            pygame.draw.rect(img, red, [0, 0, 31, 31], 3)
-            outlined = planes.Plane("outlined_selection", Rect([0, 0, 31, 31]))
+            pygame.draw.rect(img,
+                             red,
+                             [0, 0, self.controller.image_size-1, self.controller.image_size-1],
+                             3)
+            outlined = planes.Plane("outlined_selection",
+                                    Rect([0, 0, self.controller.image_size-1, self.controller.image_size-1]))
             outlined.image.blit(img, (0,0))
             s.plane.sub(outlined)
             self.game_plane.sub(s.plane)

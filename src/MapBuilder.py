@@ -38,12 +38,12 @@ city_name_list = ["Bree", "Chicago", "Hobbiton", "Farmington", "Gotham City", "B
 
 city_namer = Namer(name_list=city_name_list, number_names=False)
 
-def map_builder(size, numcities=10, numwater=3, squaresize=32):
+def map_builder(size, squaresize, numcities=10, numwater=3):
     """Generate a map in the given game"""
     map = Map(dims=size, squaresize=squaresize)
     map, cities = add_cities(map, numcities, squaresize)
     for i in range(numwater):
-        map = add_water(map, squaresize)
+        map = add_water(map, squaresize, min_dia=4*i)
 
     return map, cities
 
