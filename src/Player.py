@@ -43,7 +43,6 @@ class Player(object):
 
         self.cities.append(city)
         city.owner = self
-        city.set_image(self.color)
         if build_unit:
             city.start_building()
         else:
@@ -53,7 +52,6 @@ class Player(object):
         """assign a unit to the player"""
         self.units.append(unit)
         unit.owner = self
-        unit.set_image(self.color)
 
     def turn_step(self, G):
         """Adjust the player to reflect moving forward in time.

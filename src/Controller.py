@@ -23,7 +23,7 @@ import Game
 
 class World(object):
     """ global controller construct"""
-    def __init__(self, size, image_size):
+    def __init__(self, size):
         self.id=random.randint(101,1001)
         self.end = False
         self.image_size = image_size
