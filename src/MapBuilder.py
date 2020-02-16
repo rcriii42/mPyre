@@ -43,28 +43,28 @@ city_namer = Namer(name_list=city_name_list, number_names=False)
 
 def map_builder(size, squaresize, numcities=10, numwater=3):
     """Generate a map in the given game"""
-    map = Map(dims=size, squaresize=squaresize)
-    map, cities = add_cities(map, numcities, squaresize)
+    map = Map(dims=size)
+    map, cities = add_cities(map, numcities)
     for i in range(numwater):
-        map = add_water(map, squaresize, min_dia=4*i)
+        map = add_water(map, min_dia=4*i)
 
     return map, cities
 
-def add_water(map, squaresize, min_dia=3):
+def add_water(map, min_dia=3):
     """add water bodies to the map
 
     min_dia is the diameter of the smallest water body"""
     while True:
-        base_coords = (random.randint(0, map.dims[0]/squaresize)*squaresize,
-                       random.randint(0, map.dims[1]/squaresize)*squaresize)
+        base_coords = (random.randint(0, map.dims[0]),
+                       random.randint(0, map.dims[1]))
         if map[base_coords] == "plains":
             map[base_coords] = 'water'
             break
     water_to_check = [base_coords]
-    for x in range(0, min_dia*squaresize, squaresize):
-        for y in range(0, min_dia*squaresize, squaresize):
-            coords = (x + base_coords[0] - int(min_dia/2)*squaresize,
-                      y + base_coords[1] - int(min_dia/2)*squaresize)
+    for x in range(0, min_dia):
+        for y in range(0, min_dia):
+            coords = (x + base_coords[0] - int(min_dia/2),
+                      y + base_coords[1] - int(min_dia/2))
             if 0<coords[0]<map.dims[0] and 0<coords[1]<map.dims[1]:
                 if map[coords] == "plains":
                     map[coords] = "water"
@@ -85,7 +85,7 @@ def add_water(map, squaresize, min_dia=3):
     return map
 
 
-def add_cities(map, numcities, squaresize):
+def add_cities(map, numcities):
     """Add cities to the map
 
     return a list of cites"""
@@ -94,8 +94,8 @@ def add_cities(map, numcities, squaresize):
     for i in range(numcities):
         name = city_namer.name_unit()
         while True:
-            coords = (random.randint(0, map.dims[0]/squaresize)*squaresize,
-                      random.randint(0, map.dims[1]/squaresize)*squaresize)
+            coords = (random.randint(0, map.dims[0]),
+                      random.randint(0, map.dims[1]))
             if coords not in coords_list and map[coords]=="plains":
                 break
         coords_list.append(coords)
@@ -105,7 +105,7 @@ def add_cities(map, numcities, squaresize):
     return map, city_list
 
 
-def draw_map(game_plane, map):
+def draw_map(game_plane, map, squaresize):
     """Draw the map on the pygame background
 
     Works only after pygame.init()"""
@@ -116,15 +116,15 @@ def draw_map(game_plane, map):
 
     game_background = tile_texture(game_plane.image, tiles)
 
-    for x in range(0, map.dims[0]+map.squaresize, map.squaresize):
-        game_background.blit(border_tile, (x, 0))
-        game_background.blit(border_tile, (x, map.dims[1]+map.squaresize))
-    for y in range(0, map.dims[1]+map.squaresize, map.squaresize):
-        game_background.blit(border_tile, (0, y))
-        game_background.blit(border_tile, (map.dims[0]+map.squaresize, y))
+    for x in range(0, map.dims[0] + 1):
+        game_background.blit(border_tile, (x*squaresize, 0))
+        game_background.blit(border_tile, (x*squaresize, (map.dims[1]+1)*squaresize))
+    for y in range(0, map.dims[1]):
+        game_background.blit(border_tile, (0, y*squaresize))
+        game_background.blit(border_tile, ((map.dims[0]+1)*squaresize, y))
     for xy, terrain in map.items():
         if terrain == 'water':
-            game_background.blit(sea_tile, xy)
+            game_background.blit(sea_tile, (xy[0]*squaresize, xy[1]*squaresize))
     return game_background
 
 
