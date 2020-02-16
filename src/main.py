@@ -28,7 +28,7 @@ if __name__ == "__main__":
     size = (30, 30)
     pygame.init()
     pygame.display.set_mode(size[0]*image_size, size[1]*image_size)
-    W = Controller.World(size, image_size)
+    W = Controller.World(size)
     GW = GameWindow(W)
 
     GW.mainloop()
