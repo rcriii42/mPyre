@@ -80,9 +80,10 @@ class AI():
             u = self.moving_unit.check_collision(new_coords, self.game)
             if isinstance(u, City):
                 break
-            elif isinstance(u, Unit) or self.game.map[new_coords] in self.moving_unit.cannot_enter:
-                if self.moving_unit.owner is u.owner:
-                    new_dir = {( 0,  1): ( 1,  1),  #adjust movement clockwise
+            elif isinstance(u, Unit) and not (self.moving_unit.owner is u.owner):
+                break
+            elif self.game.map[new_coords] in self.moving_unit.cannot_enter or u:
+                new_dir = {( 0,  1): ( 1,  1),  #adjust movement clockwise
                            ( 1,  1): ( 1,  0),
                            ( 1,  0): ( 1, -1),
                            ( 1, -1): ( 0, -1),
@@ -90,12 +91,10 @@ class AI():
                            (-1, -1): (-1,  0),
                            (-1,  0): (-1,  1),
                            (-1,  1): ( 0,  1)}[dir]
-                    new_coords = (self.moving_unit.coords[0] + new_dir[0],
-                                  self.moving_unit.coords[1] + new_dir[1])
-                    #print("move unit found collision {} {}".format(dir, new_dir))
-                    dir = new_dir
-                else:
-                    break
+                new_coords = (self.moving_unit.coords[0] + new_dir[0],
+                              self.moving_unit.coords[1] + new_dir[1])
+                #print("move unit found collision {} {}".format(dir, new_dir))
+                dir = new_dir
             else:
                 break
         key = {( 0,  1): K_KP2,
