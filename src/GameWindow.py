@@ -122,8 +122,6 @@ class GameWindow(object):
     """
     def __init__(self, controller, timeScale=1):
         self.controller = controller
-        self.max_frame_rate = 10    #max frame rate in frames-per-second
-        self.clock = pygame.time.Clock()
 
         pygame.init()
         self.screenSize = (controller.size[0] + controller.image_size*2 + 12,
@@ -150,14 +148,14 @@ class GameWindow(object):
                                              self.game_plane)
         self.screen.sub(scroller)
         
-        #The main status display - Date and player $$
+        #The main status display - turn and player name
         self.turn_status = planes.gui.Button("Turn: 1",
-                                                Rect(0, self.screenSize[1]-30, 150, 30),
-                                                self.next_turn) #callback placeholder
+                                             Rect(0, self.screenSize[1]-30, 150, 30),
+                                             self.next_turn) #callback placeholder
         self.screen.sub(self.turn_status)
         self.player_status = planes.gui.Button("Player: player_1",
-                                                   Rect(150, self.screenSize[1]-30, 125, 30),
-                                                   None) #callback placeholder
+                                               Rect(150, self.screenSize[1]-30, 125, 30),
+                                               None) #callback placeholder
         self.screen.sub(self.player_status)
 
         self.status_window = None
@@ -317,7 +315,9 @@ class GameWindow(object):
                 if self.city_bubble:
                     self.city_bubble.destroy()
                     self.city_bubble = None
-                #self.next_message = "Mouse click: %s %s"%(`last_mouse_down.pos`, `last_mouse_down.button`)
+                self.next_message = "Mouse click: {} {} {}".format(last_mouse_down.pos,
+                                                                (last_mouse_down.pos[0]/32, last_mouse_down.pos[1]/32),
+                                                                last_mouse_down.button)
                 for c in self.controller.G.cities:
                     #did we click on a city?
                     if c.plane.rect.collidepoint(last_mouse_down.pos):
@@ -341,14 +341,14 @@ class GameWindow(object):
                     last_key_down.key in [K_UP, K_DOWN, K_LEFT, K_RIGHT,
                                           K_KP1, K_KP2, K_KP3, K_KP4,
                                           K_KP6, K_KP7, K_KP8, K_KP9]:
-                    self.selected =self.controller.move_unit(self.selected, last_key_down.key)
+                    self.selected = self.controller.move_unit(self.selected, last_key_down.key)
                     if self.selected:
                         if self.selected.moved >= self.selected.move_speed:
                             self.selected = self.selected.owner.next_to_move(self.selected)
                     else:
-                        self.selected =self.controller.G.current_player.next_to_move()
+                        self.selected = self.controller.G.current_player.next_to_move()
                 elif last_key_down.key in [K_n]:
-                    self.selected =self.controller.G.current_player.next_to_move(self.selected)
+                    self.selected = self.controller.G.current_player.next_to_move(self.selected)
                 elif last_key_down.key in [K_END]:
                     self.next_turn()
 
@@ -376,4 +376,3 @@ class GameWindow(object):
                 self.advance_turn = False
             pygame.event.clear()
             if self.next_message: print(self.next_message)
-            elapsed = self.clock.tick(self.max_frame_rate)
