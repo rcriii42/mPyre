@@ -41,7 +41,6 @@ class City(Unit):
         self.name = name
         self.owner = None
         self.image_file = os.path.join('graphics', 'city_tile_32x32.png')
-        self.set_image()
         self.plane = None
 
         self.is_container = True
