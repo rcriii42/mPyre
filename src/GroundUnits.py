@@ -32,7 +32,7 @@ namer = Namer()
 class Infantry(Unit):
     """The basic ground unit"""
 
-    def __init__(self, name=None, coords=(0, 0), size=(32, 32)):
+    def __init__(self, name=None, coords=(0, 0)):
         self.coords = coords
         if name:
             self.name = name
@@ -40,7 +40,6 @@ class Infantry(Unit):
             self.name = namer.name_unit()
         self.owner = None
         self.image_file = os.path.join('graphics', 'inf_icon_32x32.png')
-        self.set_image(size)
         self.plane = None
 
         self.moved = 0
