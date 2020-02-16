@@ -120,12 +120,13 @@ class GameWindow(object):
     """
     GameWindow - Class to wrap the graphical display for the game.
     """
-    def __init__(self, controller, timeScale=1):
+    def __init__(self, controller, image_size):
         self.controller = controller
+        self.image_size = image_size
 
         pygame.init()
-        self.screenSize = (controller.size[0] + controller.image_size*2 + 12,
-                           controller.image_size*17 + controller.image_size*2 + 30)
+        self.screenSize = (controller.size[0]*image_size + image_size*2 + 12,
+                           image_size*17 + image_size*2 + 30)
         self.w32windowClass = "pygame"  #The win32 window class for this object
         self.screen = planes.Display(self.screenSize)
         self.windowCaption = "mPyre"
@@ -136,10 +137,11 @@ class GameWindow(object):
 
         
         # #The game screen
-        self.game_plane = planes.Plane("game screen", Rect(0, 0, controller.size[0]+ controller.image_size*2,
-                                                           controller.size[1]+ controller.image_size*2))
+        self.game_plane = planes.Plane("game screen", Rect(0, 0,
+                                                           (controller.size[0] + 2)*image_size,
+                                                           (controller.size[1] + 2)*image_size))
 
-        self.game_background = draw_map(self.game_plane, self.controller.G.map)
+        self.game_background = draw_map(self.game_plane, self.controller.G.map, self.image_size)
 
         self.game_plane.image.blit(self.game_background, (0,0))
 
@@ -187,10 +189,10 @@ class GameWindow(object):
             img = s.plane.image.copy()
             pygame.draw.rect(img,
                              red,
-                             [0, 0, self.controller.image_size-1, self.controller.image_size-1],
+                             [0, 0, self.image_size-1, self.image_size-1],
                              3)
             outlined = planes.Plane("outlined_selection",
-                                    Rect([0, 0, self.controller.image_size-1, self.controller.image_size-1]))
+                                    Rect([0, 0, self.image_size-1, self.image_size-1]))
             outlined.image.blit(img, (0,0))
             s.plane.sub(outlined)
             self.game_plane.sub(s.plane)
@@ -203,14 +205,20 @@ class GameWindow(object):
         self.game_plane.image.blit(self.game_background, (0,0)) #reset background drawing
         for c in game.cities:
             if not c.plane:
-                c.plane = planes.Plane("City of {}".format(c.name), Rect(c.coords, c.image_size))
+                c_rect = Rect((c.coords[0]*self.image_size, c.coords[1]*self.image_size),
+                              [self.image_size]*2)
+                c.set_image([self.image_size]*2, c.owner.color)
+                c.plane = planes.Plane("City of {}".format(c.name), c_rect)
                 c.plane.image.blit(c.image, (0,0))
                 c.plane.sub(c.plane)
                 self.game_plane.sub(c.plane)
 
         for u in game.units:
             if not u.plane:
-                u.plane = planes.Plane("Unit {}".format(u.name), Rect(u.coords, u.image_size))
+                u_rect = Rect((u.coords[0] * self.image_size, u.coords[1] * self.image_size),
+                              [self.image_size] * 2)
+                u.set_image([self.image_size]*2, u.owner.color)
+                u.plane = planes.Plane("Unit {}".format(u.name), u_rect)
                 u.plane.image.blit(u.image, (0, 0))
                 self.game_plane.sub(u.plane,
                                     insert_before=self.game_plane.subplanes_list[0])
@@ -341,8 +349,11 @@ class GameWindow(object):
                     last_key_down.key in [K_UP, K_DOWN, K_LEFT, K_RIGHT,
                                           K_KP1, K_KP2, K_KP3, K_KP4,
                                           K_KP6, K_KP7, K_KP8, K_KP9]:
-                    self.selected = self.controller.move_unit(self.selected, last_key_down.key)
-                    if self.selected:
+                    self.controller.move_unit(self.selected, last_key_down.key)
+                    if self.selected.plane:
+                        vector = (self.selected.coords[0] * self.image_size - self.selected.plane.rect.x,
+                                  self.selected.coords[1] * self.image_size - self.selected.plane.rect.y)
+                        self.selected.plane.rect.move_ip(vector)
                         if self.selected.moved >= self.selected.move_speed:
                             self.selected = self.selected.owner.next_to_move(self.selected)
                     else:
