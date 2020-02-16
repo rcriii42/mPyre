@@ -24,9 +24,11 @@ Map - a dictionary holding all the spaces on a map
 
 
 import os
-import pygame
-from GraphicUtils import colors
 import random
+import pygame
+
+from GraphicUtils import colors
+
 
 infantry_list = ["Infantry",
                  "Grenadiers",
@@ -155,9 +157,12 @@ class Map(dict):
     def __init__(self, name='The Map', dims=(10,10)):
         self.name = name
         self.dims = dims
+        self.terrain = set('edge', 'plains')
 
 
     def __getitem__(self, key):
+        if key in self.terrain:
+            return [x[0] for x in self.items() if x[1]==key]
         if type(key) is not type(self.dims):
             raise TypeError("Invalid type for map coords: {}".format(key))
         if key[0] > self.dims[0] or key[1] > self.dims[1]:
@@ -175,6 +180,7 @@ class Map(dict):
             raise KeyError("Coordinates out of bounds: {}".format(key))
         if key[0] < 0 or key[1] < 0:
             raise KeyError("Coordinates out of bounds: {}".format(key))
+        self.terrain.add(value)
         super(Map, self).__setitem__(key, value)
 
     def neighbors(self, xy):
