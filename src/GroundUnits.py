@@ -77,7 +77,7 @@ class Infantry(Unit):
         elif direction in [K_LEFT, K_KP4]:
             move_vector = -1, 0
         elif direction in [K_KP7]:
-            move_vector = -1, -s1
+            move_vector = -1, -1
         else:
             return False
         new_coords = (self.coords[0]+ move_vector[0],
