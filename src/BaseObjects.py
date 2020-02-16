@@ -100,11 +100,11 @@ class Unit(object):
         self.attack = 0 #Attack Strength and damage dealt
         self.defense = 1 #Defense strength, successful defense always does 1 damage
 
-    def set_image(self, color=None):
+    def set_image(self, size, color=None):
         """Set the image and color"""
         image = pygame.image.load(self.image_file).convert()
-        self.image_size = (32, 32)
-        self.image = pygame.transform.scale(image, self.image_size)
+
+        self.image = pygame.transform.scale(image, size)
         if color:
             new_pixels = pygame.transform.threshold(self.image,
                                                     self.image,
@@ -152,10 +152,10 @@ class Unit(object):
 class Map(dict):
     """Map - meta object"""
 
-    def __init__(self, name='The Map', dims=(10,10), squaresize=32):
+    def __init__(self, name='The Map', dims=(10,10)):
         self.name = name
         self.dims = dims
-        self.squaresize = squaresize
+
 
     def __getitem__(self, key):
         if type(key) is not type(self.dims):
@@ -183,10 +183,10 @@ class Map(dict):
         for x in [-1, 0, 1]:
             for y in [-1, 0, 1]:
                 if (x, y) != (0, 0) and \
-                   (0<=xy[0] + x*self.squaresize<=self.dims[0]) and \
-                   (0<=xy[1] + y*self.squaresize<=self.dims[1]):
-                    ne_list.append((xy[0] + x*self.squaresize,
-                                    xy[1] + y*self.squaresize))
+                   (0 <= xy[0] + x <= self.dims[0]) and \
+                   (0 <= xy[1] + y <= self.dims[1]):
+                    ne_list.append((xy[0] + x,
+                                    xy[1] + y))
         return ne_list
 
 
