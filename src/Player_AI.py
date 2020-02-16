@@ -80,7 +80,7 @@ class AI():
             u = self.moving_unit.check_collision(new_coords, self.game)
             if isinstance(u, City):
                 break
-            elif isinstance(u, Unit) or self.game.map[new_coords] in self.moving_unit.connot_enter:
+            elif isinstance(u, Unit) or self.game.map[new_coords] in self.moving_unit.cannot_enter:
                 if self.moving_unit.owner is u.owner:
                     new_dir = {( 0,  1): ( 1,  1),  #adjust movement clockwise
                            ( 1,  1): ( 1,  0),
