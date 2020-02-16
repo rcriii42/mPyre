@@ -41,7 +41,7 @@ city_name_list = ["Bree", "Chicago", "Hobbiton", "Farmington", "Gotham City", "B
 
 city_namer = Namer(name_list=city_name_list, number_names=False)
 
-def map_builder(size, squaresize, numcities=10, numwater=3):
+def map_builder(size, numcities=10, numwater=3):
     """Generate a map in the given game"""
     map = Map(dims=size)
     map, cities = add_cities(map, numcities)
@@ -119,9 +119,9 @@ def draw_map(game_plane, map, squaresize):
     for x in range(0, map.dims[0] + 1):
         game_background.blit(border_tile, (x*squaresize, 0))
         game_background.blit(border_tile, (x*squaresize, (map.dims[1]+1)*squaresize))
-    for y in range(0, map.dims[1]):
+    for y in range(0, map.dims[1] + 2):
         game_background.blit(border_tile, (0, y*squaresize))
-        game_background.blit(border_tile, ((map.dims[0]+1)*squaresize, y))
+        game_background.blit(border_tile, ((map.dims[0]+1)*squaresize, y*squaresize))
     for xy, terrain in map.items():
         if terrain == 'water':
             game_background.blit(sea_tile, (xy[0]*squaresize, xy[1]*squaresize))
