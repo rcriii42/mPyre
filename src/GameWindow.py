@@ -20,17 +20,18 @@
 
 
 
-import pygame, os
+import pygame
 from pygame.locals import Rect
 from pygame.locals import QUIT, MOUSEMOTION, MOUSEBUTTONDOWN, MOUSEBUTTONUP
 from pygame.locals import KEYDOWN, K_UP, K_DOWN, K_LEFT, K_RIGHT
 from pygame.locals import K_KP1, K_KP2, K_KP3, K_KP4, K_KP6, K_KP7, K_KP8, K_KP9
 from pygame.locals import K_n, K_END
-from GraphicUtils import tile_texture
+
 import planes
 import planes.gui
 from GraphicUtils import colors
 import BaseObjects, Cities
+from MapBuilder import draw_map
 
 char_width = 10
 
@@ -137,24 +138,10 @@ class GameWindow(object):
 
         
         # #The game screen
-        plains_tile = pygame.image.load(os.path.join('graphics', 'plains_tile_32x32.png')).convert()
-        border_tile = pygame.image.load(os.path.join('graphics', 'edge_tile_32x32.png')).convert()
-        sea_tile = pygame.image.load(os.path.join('graphics', 'sea_tile_32x32.png')).convert()
-        self.tiles = [plains_tile]*100
         self.game_plane = planes.Plane("game screen", Rect(0, 0, controller.size[0]+ controller.image_size*2,
                                                            controller.size[1]+ controller.image_size*2))
 
-        self.game_background = tile_texture(self.game_plane.image, self.tiles)
-        #TODO: why not just blit based on the map? It knows about edges
-        for x in range(0, controller.size[0]+ controller.image_size*2, controller.image_size):
-            self.game_background.blit(border_tile, (x, 0))
-            self.game_background.blit(border_tile, (x, controller.size[1]+ controller.image_size))
-        for y in range(0, controller.size[1]+ controller.image_size*2, controller.image_size):
-            self.game_background.blit(border_tile, (0, y))
-            self.game_background.blit(border_tile, (controller.size[0]+ controller.image_size, y))
-        M = self.controller.G.map
-        for xy, terrain in M.items():
-            self.game_background.blit(sea_tile, xy)
+        self.game_background = draw_map(self.game_plane, self.controller.G.map)
 
         self.game_plane.image.blit(self.game_background, (0,0))
 

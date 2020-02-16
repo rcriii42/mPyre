@@ -19,9 +19,12 @@
 #     Work started on 9 Frbruary, 2020
 
 import random
+import os
+import pygame
 
 from BaseObjects import Namer, Map
 from Cities import City
+from GraphicUtils import tile_texture
 
 
 
@@ -102,6 +105,26 @@ def add_cities(map, numcities, squaresize):
     return map, city_list
 
 
+def draw_map(game_plane, map):
+    """Draw the map on the pygame background
 
+    Works only after pygame.init()"""
+    plains_tile = pygame.image.load(os.path.join('graphics', 'plains_tile_32x32.png')).convert()
+    tiles = [plains_tile]
+    border_tile = pygame.image.load(os.path.join('graphics', 'edge_tile_32x32.png')).convert()
+    sea_tile = pygame.image.load(os.path.join('graphics', 'sea_tile_32x32.png')).convert()
+
+    game_background = tile_texture(game_plane.image, tiles)
+
+    for x in range(0, map.dims[0]+map.squaresize, map.squaresize):
+        game_background.blit(border_tile, (x, 0))
+        game_background.blit(border_tile, (x, map.dims[1]+map.squaresize))
+    for y in range(0, map.dims[1]+map.squaresize, map.squaresize):
+        game_background.blit(border_tile, (0, y))
+        game_background.blit(border_tile, (map.dims[0]+map.squaresize, y))
+    for xy, terrain in map.items():
+        if terrain == 'water':
+            game_background.blit(sea_tile, xy)
+    return game_background
 
 
