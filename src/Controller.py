@@ -20,6 +20,7 @@
 
 import random
 import Game
+from BaseObjects import Unit
 
 class World(object):
     """ global controller construct"""
@@ -73,14 +74,10 @@ class World(object):
         """Move the given unit if possible"""
         while moving_unit.move_speed > moving_unit.moved:
             target_unit = moving_unit.move(key, self.G)
-            if target_unit:
-                if target_unit.owner is not moving_unit.owner: #Attack!
-                    if not self.resolve_combat(moving_unit, target_unit):
-                        return None
+            if isinstance(target_unit, Unit):
+                return self.resolve_combat(moving_unit, target_unit)
             else:
-                return moving_unit
-
-        return None
+                return target_unit
 
     def resolve_combat(self, attacker, defender):
         """Resolve an attack by one unit on another
