@@ -32,7 +32,7 @@ namer = Namer()
 class Infantry(Unit):
     """The basic ground unit"""
 
-    def __init__(self, name=None, coords=(0, 0)):
+    def __init__(self, name=None, coords=(0, 0), size=(32, 32)):
         self.coords = coords
         if name:
             self.name = name
@@ -40,7 +40,7 @@ class Infantry(Unit):
             self.name = namer.name_unit()
         self.owner = None
         self.image_file = os.path.join('graphics', 'inf_icon_32x32.png')
-        self.set_image()
+        self.set_image(size)
         self.plane = None
 
         self.moved = 0
@@ -63,48 +63,43 @@ class Infantry(Unit):
             return None
         #print("{} moving {}, moved {}".format(self.name, self.move_speed, self.moved))
         if direction in [K_UP, K_KP8]:
-            move_vector = 0, -self.image_size[1]
+            move_vector = 0, -1
         elif direction in [K_KP9]:
-            move_vector = self.image_size[0], -self.image_size[1]
+            move_vector = 1, -1
         elif direction in [K_RIGHT, K_KP6]:
-            move_vector = self.image_size[0], 0
+            move_vector = 1, 0
         elif direction in [K_KP3]:
-            move_vector = self.image_size[0], self.image_size[1]
+            move_vector = 1, 1
         elif direction in [K_DOWN, K_KP2]:
-            move_vector = 0, self.image_size[1]
+            move_vector = 0, 1
         elif direction in [K_KP1]:
-            move_vector = -self.image_size[0], self.image_size[1]
+            move_vector = -1, 1
         elif direction in [K_LEFT, K_KP4]:
-            move_vector = -self.image_size[0], 0
+            move_vector = -1, 0
         elif direction in [K_KP7]:
-            move_vector = -self.image_size[0], -self.image_size[1]
+            move_vector = -1, -s1
         else:
-            return None
+            return False
         new_coords = (self.coords[0]+ move_vector[0],
                       self.coords[1] + move_vector[1])
         if G.map[new_coords] in self.connot_enter :
             #print("{} cannot move into {}".format(self.name, G.map[new_coords]))
-            return None
+            return False
         u = self.check_collision(new_coords, G)
         if not u:
             self.coords = new_coords
-            self.plane.rect.move_ip(move_vector)
             self.moved += 1
-            return None
+            return True
         elif u.owner is not self.owner:
             return u
         elif isinstance(u, Cities.City):
             self.coords = new_coords
-            self.plane.rect.move_ip(move_vector)
             self.moved += 1
-            return None
+            return True
         else:
-            return None
+            return False
 
     def turn_step(self, G):
-        if self.plane:
-            if self.coords != (self.plane.rect.left, self.plane.rect.top):
-                print("{} Coordinate mismatch {} != {}".format(self.name, self.coords, (self.plane.rect.left, self.plane.rect.top)))
         turn_messages = ["{} turn {} moved {}".format(self.name, G.turn, self.moved)]
         self.moved = 0
         return turn_messages
