@@ -157,7 +157,7 @@ class Map(dict):
     def __init__(self, name='The Map', dims=(10,10)):
         self.name = name
         self.dims = dims
-        self.terrain = set('edge', 'plains')
+        self.terrain = set(['edge', 'plains'])
 
 
     def __getitem__(self, key):
