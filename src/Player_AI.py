@@ -74,8 +74,8 @@ class AI():
     def move_unit(self, target):
         """Move the moving_unit towards the target if it can"""
         dir = self.moving_unit.direction_to(target)
-        new_coords = (self.moving_unit.coords[0]+dir[0]*self.moving_unit.image_size[0],
-                      self.moving_unit.coords[1]+dir[1]*self.moving_unit.image_size[1])
+        new_coords = (self.moving_unit.coords[0]+dir[0],
+                      self.moving_unit.coords[1]+dir[1])
         while True:
             u = self.moving_unit.check_collision(new_coords, self.game)
             if isinstance(u, City):
@@ -90,8 +90,8 @@ class AI():
                            (-1, -1): (-1,  0),
                            (-1,  0): (-1,  1),
                            (-1,  1): ( 0,  1)}[dir]
-                    new_coords = (self.moving_unit.coords[0] + new_dir[0] * self.moving_unit.image_size[0],
-                                  self.moving_unit.coords[1] + new_dir[1] * self.moving_unit.image_size[1])
+                    new_coords = (self.moving_unit.coords[0] + new_dir[0],
+                                  self.moving_unit.coords[1] + new_dir[1])
                     #print("move unit found collision {} {}".format(dir, new_dir))
                     dir = new_dir
                 else:
