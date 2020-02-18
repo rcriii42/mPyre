@@ -26,8 +26,8 @@ from BaseObjects import Namer, Map
 from Cities import City
 from GraphicUtils import tile_texture
 
-default_city_density = 300
-default_water_frac = 0.5
+default_city_density = 90
+default_water_frac = 0.33
 
 city_name_list = ["Bree", "Chicago", "Hobbiton", "Farmington", "Gotham City", "Beijing",
                   "Danville", "Mayberry", "Salzburg", "Quahog", "Sacramento", "Bedrock",
@@ -98,6 +98,22 @@ def add_water(map, min_dia=3):
                     map[n] = 'water'
                     water_to_check.append(n)
             checked.append(n)
+    #Remove singleton water and water whose only neighbor is diagonal
+    for sq in map['water']:
+        if len([s for s in map.neighbors(sq) if map[s]=='water'])==0:
+            map[sq] = 'plains'
+        if len([s for s in map.neighbors(sq) if map[s] == 'water']) == 1:
+            if len([s for s in map.cardinal_neighbors(sq) if map[s] == 'water']) == 0:
+                map[sq] = 'plains'
+
+    # Remove singleton plains and plains whose only neighbor is diagonal
+    for sq in map['plains']:
+        if len([s for s in map.neighbors(sq) if map[s] in ['plains', 'city']]) == 0:
+            map[sq] = 'water'
+        if len([s for s in map.neighbors(sq) if map[s] in ['plains',  'city']]) == 1:
+            if len([s for s in map.cardinal_neighbors(sq) if map[s] in ['plains', 'city']]) == 0:
+                map[sq] = 'water'
+
     return map
 
 
