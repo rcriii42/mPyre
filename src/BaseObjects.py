@@ -162,7 +162,16 @@ class Map(dict):
 
     def __getitem__(self, key):
         if key in self.terrain:
-            return [x[0] for x in self.items() if x[1]==key]
+            if key == 'plains':
+                return [(x, y) for x in range(self.dims[0]) \
+                               for y in range(self.dims[1]) \
+                               if self[(x, y)]=='plains']
+            if key == 'edge':
+                return [(x, y) for x in range(self.dims[0]) \
+                               for y in range(self.dims[1]) \
+                               if self[(x, y)]=='edge']
+            else:
+                return [x[0] for x in self.items() if x[1]==key]
         if type(key) is not type(self.dims):
             raise TypeError("Invalid type for map coords: {}".format(key))
         if key[0] > self.dims[0] or key[1] > self.dims[1]:
@@ -195,5 +204,25 @@ class Map(dict):
                                     xy[1] + y))
         return ne_list
 
+    def cardinal_neighbors(self, xy):
+        """Return a list of coordinates of the neighbors of the given square
+        in the cardinal directions (N, E, S, W)"""
+        ne_list = []
+        for x, y in [(1, 0), (-1, 0), (0, 1), (0, -1)]:
+            if (0 <= xy[0] + x <= self.dims[0]) and \
+               (0 <= xy[1] + y <= self.dims[1]):
+                ne_list.append((xy[0] + x,
+                                xy[1] + y))
+        return ne_list
 
+    def diagonal_neighbors(self, xy):
+        """Return a list of coordinates of the neighbors of the given square
+                in the diagonal directions"""
+        ne_list = []
+        for x, y in [(1, 1), (-1, 1), (-1, -1), (1, -1)]:
+            if (0 <= xy[0] + x <= self.dims[0]) and \
+               (0 <= xy[1] + y <= self.dims[1]):
+                ne_list.append((xy[0] + x,
+                                xy[1] + y))
+        return ne_list
 
