@@ -37,12 +37,14 @@ def comprehension_flatten(iter_lst):
 player_namer = Namer(name_list=["Joe", "Svetlana", "Estefan", "Wang Xiu Ying"],
                      number_names=False)
 
-def furthest_city(map, coords):
-    """find the furthest city on the map from the given coordinates"""
-    cities = [c[0] for c in map.items() if c[1]=="city"]
-    distances = [max(abs(coords[0]-c[0]), abs(coords[1]-c[1])) for c in cities]
-    z = [x for x in zip(cities, distances)]
-    so = sorted(z, key=lambda tup: tup[1])
+def furthest_city_coords(map, coords):
+    """find the furthest city on the map from the given coordinates
+
+    Returns the coordinates of that city"""
+    city_coords = [c[0] for c in map.items() if c[1]=="city"]
+    distances = [max(abs(coords[0]-c[0]), abs(coords[1]-c[1])) for c in city_coords]
+    so = sorted([x for x in zip(city_coords, distances)],
+                key=lambda tup: tup[1])
     return so[-1][0]
 
 class Game(object):
@@ -65,8 +67,8 @@ class Game(object):
         self.players[0].assign_unit(Infantry(coords=(self.cities[0].coords[0],
                                                      self.cities[0].coords[1])))
 
-        furthest_from = furthest_city(self.map, self.cities[0].coords)
-        c1 = [c for c in self.cities if c.coords==furthest_from][0]
+        furthest_coords = furthest_city_coords(self.map, self.cities[0].coords)
+        c1 = [c for c in self.cities if c.coords==furthest_coords][0]
         self.players[1].assign_city(c1)
         self.players[1].assign_unit(Infantry(coords=(c1.coords[0],
                                                      c1.coords[1])))
@@ -75,8 +77,8 @@ class Game(object):
 
         avg_coords = (int((self.cities[0].coords[0] + c1.coords[0])/2),
                       int((self.cities[0].coords[1] + c1.coords[1]) / 2))
-        furthest_from = furthest_city(self.map, avg_coords)
-        c2 = [c for c in self.cities if c.coords == furthest_from][0]
+        furthest_coords = furthest_city_coords(self.map, avg_coords)
+        c2 = [c for c in self.cities if c.coords == furthest_coords][0]
         self.players[2].assign_city(c2)
         self.players[2].assign_unit(Infantry(coords=(c2.coords[0],
                                                      c2.coords[1])))

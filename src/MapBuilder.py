@@ -26,7 +26,8 @@ from BaseObjects import Namer, Map
 from Cities import City
 from GraphicUtils import tile_texture
 
-
+default_city_density = 90
+default_water_frac = 0.33
 
 city_name_list = ["Bree", "Chicago", "Hobbiton", "Farmington", "Gotham City", "Beijing",
                   "Danville", "Mayberry", "Salzburg", "Quahog", "Sacramento", "Bedrock",
@@ -41,12 +42,27 @@ city_name_list = ["Bree", "Chicago", "Hobbiton", "Farmington", "Gotham City", "B
 
 city_namer = Namer(name_list=city_name_list, number_names=False)
 
-def map_builder(size, numcities=10, numwater=3):
-    """Generate a map in the given game"""
+def map_builder(size, numcities=False, frac_water=False):
+    """Generate a map in the given game
+
+    size is the size of the map (x, y) in map coords
+    numcities is the number of cities on the map, defaults to one per
+     default_city_density squares
+     frac_water is the fraction of the map that is water"""
+    area = size[0] * size[1]
+    if not numcities:
+        numcities = int(area / default_city_density +.5)
+    if not frac_water:
+        frac_water = default_water_frac
+
     map = Map(dims=size)
+    while True:
+        map = add_water(map, 4)
+        if len(map['water']) >= area * frac_water:
+            break
+
     map, cities = add_cities(map, numcities)
-    for i in range(numwater):
-        map = add_water(map, min_dia=4*i)
+
 
     return map, cities
 
@@ -82,6 +98,22 @@ def add_water(map, min_dia=3):
                     map[n] = 'water'
                     water_to_check.append(n)
             checked.append(n)
+    #Remove singleton water and water whose only neighbor is diagonal
+    for sq in map['water']:
+        if len([s for s in map.neighbors(sq) if map[s]=='water'])==0:
+            map[sq] = 'plains'
+        if len([s for s in map.neighbors(sq) if map[s] == 'water']) == 1:
+            if len([s for s in map.cardinal_neighbors(sq) if map[s] == 'water']) == 0:
+                map[sq] = 'plains'
+
+    # Remove singleton plains and plains whose only neighbor is diagonal
+    for sq in map['plains']:
+        if len([s for s in map.neighbors(sq) if map[s] in ['plains', 'city']]) == 0:
+            map[sq] = 'water'
+        if len([s for s in map.neighbors(sq) if map[s] in ['plains',  'city']]) == 1:
+            if len([s for s in map.cardinal_neighbors(sq) if map[s] in ['plains', 'city']]) == 0:
+                map[sq] = 'water'
+
     return map
 
 
