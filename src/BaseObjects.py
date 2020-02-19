@@ -24,9 +24,11 @@ Map - a dictionary holding all the spaces on a map
 
 
 import os
-import pygame
-from GraphicUtils import colors
 import random
+import pygame
+
+from GraphicUtils import colors
+
 
 infantry_list = ["Infantry",
                  "Grenadiers",
@@ -155,9 +157,21 @@ class Map(dict):
     def __init__(self, name='The Map', dims=(10,10)):
         self.name = name
         self.dims = dims
+        self.terrain = set(['edge', 'plains'])
 
 
     def __getitem__(self, key):
+        if key in self.terrain:
+            if key == 'plains':
+                return [(x, y) for x in range(self.dims[0]) \
+                               for y in range(self.dims[1]) \
+                               if self[(x, y)]=='plains']
+            if key == 'edge':
+                return [(x, y) for x in range(self.dims[0]) \
+                               for y in range(self.dims[1]) \
+                               if self[(x, y)]=='edge']
+            else:
+                return [x[0] for x in self.items() if x[1]==key]
         if type(key) is not type(self.dims):
             raise TypeError("Invalid type for map coords: {}".format(key))
         if key[0] > self.dims[0] or key[1] > self.dims[1]:
@@ -175,6 +189,7 @@ class Map(dict):
             raise KeyError("Coordinates out of bounds: {}".format(key))
         if key[0] < 0 or key[1] < 0:
             raise KeyError("Coordinates out of bounds: {}".format(key))
+        self.terrain.add(value)
         super(Map, self).__setitem__(key, value)
 
     def neighbors(self, xy):
@@ -189,6 +204,16 @@ class Map(dict):
                                     xy[1] + y))
         return ne_list
 
+    def cardinal_neighbors(self, xy):
+        """Return a list of coordinates of the neighbors of the given square
+        in the cardinal directions (N, E, S, W)"""
+        ne_list = []
+        for x, y in [(1, 0), (-1, 0), (0, 1), (0, -1)]:
+            if (0 <= xy[0] + x <= self.dims[0]) and \
+               (0 <= xy[1] + y <= self.dims[1]):
+                ne_list.append((xy[0] + x,
+                                xy[1] + y))
+        return ne_list
 # function reconstruct_path(cameFrom, current)
 #     total_path := {current}
 #     while current in cameFrom.Keys:
@@ -240,4 +265,15 @@ class Map(dict):
 #
 #     // Open set is empty but goal was never reached
 #     return failure
+
+    def diagonal_neighbors(self, xy):
+        """Return a list of coordinates of the neighbors of the given square
+                in the diagonal directions"""
+        ne_list = []
+        for x, y in [(1, 1), (-1, 1), (-1, -1), (1, -1)]:
+            if (0 <= xy[0] + x <= self.dims[0]) and \
+               (0 <= xy[1] + y <= self.dims[1]):
+                ne_list.append((xy[0] + x,
+                                xy[1] + y))
+        return ne_list
 
