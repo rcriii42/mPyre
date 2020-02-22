@@ -195,10 +195,10 @@ class Map(dict):
     def neighbors(self, xy):
         """Return a list of coordinates of the neighbors of the given square"""
         ne_list = []
-        for x in [-1, 0, 1]:
-            for y in [-1, 0, 1]:
-                if (x, y) != (0, 0) and \
-                   (0 <= xy[0] + x <= self.dims[0]) and \
+        for x, y in [(-1, 1), (0, 1), (1, 1),
+                     (-1, 0), (1, 0),
+                     (-1, -1), (0, -1), (1, -1)]:
+                if (0 <= xy[0] + x <= self.dims[0]) and \
                    (0 <= xy[1] + y <= self.dims[1]):
                     ne_list.append((xy[0] + x,
                                     xy[1] + y))
