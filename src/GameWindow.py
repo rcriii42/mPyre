@@ -210,7 +210,6 @@ class GameWindow(object):
                 c.set_image([self.image_size]*2, c.owner.color)
                 c.plane = planes.Plane("City of {}".format(c.name), c_rect)
                 c.plane.image.blit(c.image, (0,0))
-                c.plane.sub(c.plane)
                 self.game_plane.sub(c.plane)
 
         for u in game.units:
