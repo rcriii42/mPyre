@@ -214,6 +214,18 @@ class Map(dict):
                 ne_list.append((xy[0] + x,
                                 xy[1] + y))
         return ne_list
+
+    def diagonal_neighbors(self, xy):
+        """Return a list of coordinates of the neighbors of the given square
+                in the diagonal directions"""
+        ne_list = []
+        for x, y in [(1, 1), (-1, 1), (-1, -1), (1, -1)]:
+            if (0 <= xy[0] + x <= self.dims[0]) and \
+               (0 <= xy[1] + y <= self.dims[1]):
+                ne_list.append((xy[0] + x,
+                                xy[1] + y))
+        return ne_list
+
 # function reconstruct_path(cameFrom, current)
 #     total_path := {current}
 #     while current in cameFrom.Keys:
@@ -266,14 +278,4 @@ class Map(dict):
 #     // Open set is empty but goal was never reached
 #     return failure
 
-    def diagonal_neighbors(self, xy):
-        """Return a list of coordinates of the neighbors of the given square
-                in the diagonal directions"""
-        ne_list = []
-        for x, y in [(1, 1), (-1, 1), (-1, -1), (1, -1)]:
-            if (0 <= xy[0] + x <= self.dims[0]) and \
-               (0 <= xy[1] + y <= self.dims[1]):
-                ne_list.append((xy[0] + x,
-                                xy[1] + y))
-        return ne_list
 
