@@ -151,8 +151,8 @@ class Unit(object):
 
 def ch_distance(xy1, xy2):
     """The cherbychev distance between to points"""
-    return max(abs(xy1.coords[0] - xy2.coords[0]),
-               abs(xy1.coords[1] - xy2.coords[1]))
+    return max(abs(xy1[0] - xy2[0]),
+               abs(xy1[1] - xy2[1]))
 
 class Map(dict):
     """Map - meta object"""
