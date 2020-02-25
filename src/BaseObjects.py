@@ -154,22 +154,26 @@ class Unit(object):
 class Map(dict):
     """Map - meta object"""
 
-    def __init__(self, name='The Map', dims=(10,10)):
+    def __init__(self, name='The Map', dims=(10,10),
+                 default_interior='plains',
+                 default_edge = 'edge'):
         self.name = name
         self.dims = dims
-        self.terrain = set(['edge', 'plains'])
+        self.terrain = set([default_edge, default_interior])
+        self.interior = default_interior
+        self.edge = default_edge
 
 
     def __getitem__(self, key):
         if key in self.terrain:
-            if key == 'plains':
+            if key == self.interior:
                 return [(x, y) for x in range(self.dims[0]) \
                                for y in range(self.dims[1]) \
-                               if self[(x, y)]=='plains']
-            if key == 'edge':
+                               if self[(x, y)]==self.interior]
+            if key == self.edge:
                 return [(x, y) for x in range(self.dims[0]) \
                                for y in range(self.dims[1]) \
-                               if self[(x, y)]=='edge']
+                               if self[(x, y)]==self.edge]
             else:
                 return [x[0] for x in self.items() if x[1]==key]
         if type(key) is not type(self.dims):
@@ -179,8 +183,8 @@ class Map(dict):
         if key[0] < 0 or key[1] < 0:
             raise KeyError("Coordinates out of bounds: {}".format(key))
         if key[0] in (0, self.dims[0]) or key[1] in (0, self.dims[1]):
-            return "edge"
-        return self.get(key, "plains")
+            return self.edge
+        return self.get(key, self.interior)
 
     def __setitem__(self, key, value):
         if type(key) is not type(self.dims):
@@ -226,28 +230,33 @@ class Map(dict):
                                 xy[1] + y))
         return ne_list
 
-# function reconstruct_path(cameFrom, current)
-#     total_path := {current}
-#     while current in cameFrom.Keys:
-#         current := cameFrom[current]
-#         total_path.prepend(current)
+# def reconstruct_path(came_from, current):
+#     """reconstruct the path
+#
+#     current is the end point
+#     came_from is dict whose keys are coordinates and values are the previous coordinates"""
+#     total_path = [current]
+#     while current in came_from.Keys:
+#         current = came_from[current]
+#         total_path.append(current)
+#     total_path.reverse()
 #     return total_path
 #
 #
-# def A_Star(start, goal, map, impassible):
-#     """// A* finds a path from start to goal.
+# def A_Star(unit, goal, map):
+#     """A* finds a path from the units location to goal.
 #
 #     map is the map object with terrain.
-#     impassible is a list of impassible terrain
+#     unit.cannot_enter is a list of impassible terrain
 #
 #     from the wiki page: https://en.wikipedia.org/wiki/A*_search_algorithm"""
 #
 #     # The set of discovered nodes that may need to be (re-)expanded.
 #     # Initially, only the start node is known.
-#     open_set = set([start])
+#     open_set = set([unit.coords])
 #
 #     # For node n, cameFrom[n] is the node immediately preceding it on the cheapest path from start to n currently known.
-#     cameFrom := an empty map
+#     cameFrom = an empty map
 #
 #     // For node n, gScore[n] is the cost of the cheapest path from start to n currently known.
 #     gScore := map with default value of Infinity
