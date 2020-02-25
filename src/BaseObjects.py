@@ -135,8 +135,7 @@ class Unit(object):
 
     def distance_to(self, unit):
         """Calculate the distance to the given unit"""
-        return max(abs(self.coords[0] - unit.coords[0]),
-                   abs(self.coords[1] - unit.coords[1]))
+        return ch_distance(self.coords, unit.coords)
 
     def direction_to(self, unit):
         """return the unit vector to the given unit"""
@@ -150,6 +149,10 @@ class Unit(object):
             y_dir = (unit.coords[1] - self.coords[1]) / abs(unit.coords[1] - self.coords[1])
         return x_dir, y_dir
 
+def ch_distance(xy1, xy2):
+    """The cherbychev distance between to points"""
+    return max(abs(xy1.coords[0] - xy2.coords[0]),
+               abs(xy1.coords[1] - xy2.coords[1]))
 
 class Map(dict):
     """Map - meta object"""
@@ -256,15 +259,18 @@ class Map(dict):
 #     open_set = set([unit.coords])
 #
 #     # For node n, cameFrom[n] is the node immediately preceding it on the cheapest path from start to n currently known.
-#     cameFrom = an empty map
+#     came_from = {}
 #
-#     // For node n, gScore[n] is the cost of the cheapest path from start to n currently known.
-#     gScore := map with default value of Infinity
-#     gScore[start] := 0
+#     #For node n, g_score[n] is the cost of the cheapest path from start to n currently known.
+#     g_score = Map('G score', map.dims, 999999999, 9999999999)
+#     g_score[start] = 0
 #
-#     // For node n, fScore[n] := gScore[n] + h(n).
-#     fScore := map with default value of Infinity
-#     fScore[start] := h(start)
+#     def h(xy1, xy2):
+#         return Unit.distance_to()
+#
+#     #For node n, f_score[n] = g_score[n] + h(n).
+#     f_score = Map('F score', map.dims, 999999999, 9999999999)
+#     fScore[start] = h(start)
 #
 #     while openSet is not empty
 #         current := the node in openSet having the lowest fScore[] value
@@ -286,5 +292,5 @@ class Map(dict):
 #
 #     // Open set is empty but goal was never reached
 #     return failure
-
-
+#
+#
