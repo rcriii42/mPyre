@@ -233,64 +233,64 @@ class Map(dict):
                                 xy[1] + y))
         return ne_list
 
-# def reconstruct_path(came_from, current):
-#     """reconstruct the path
-#
-#     current is the end point
-#     came_from is dict whose keys are coordinates and values are the previous coordinates"""
-#     total_path = [current]
-#     while current in came_from.Keys:
-#         current = came_from[current]
-#         total_path.append(current)
-#     total_path.reverse()
-#     return total_path
-#
-#
-# def A_Star(unit, goal, map):
-#     """A* finds a path from the units location to goal.
-#
-#     map is the map object with terrain.
-#     unit.cannot_enter is a list of impassible terrain
-#
-#     from the wiki page: https://en.wikipedia.org/wiki/A*_search_algorithm"""
-#
-#     # The set of discovered nodes that may need to be (re-)expanded.
-#     # Initially, only the start node is known.
-#     open_set = set([unit.coords])
-#
-#     # For node n, cameFrom[n] is the node immediately preceding it on the cheapest path from start to n currently known.
-#     came_from = {}
-#
-#     #For node n, g_score[n] is the cost of the cheapest path from start to n currently known.
-#     g_score = Map('G score', map.dims, 999999999, 9999999999)
-#     g_score[start] = 0
-#
-#     def h(xy1, xy2):
-#         return Unit.distance_to()
-#
-#     #For node n, f_score[n] = g_score[n] + h(n).
-#     f_score = Map('F score', map.dims, 999999999, 9999999999)
-#     fScore[start] = h(start)
-#
-#     while openSet is not empty
-#         current := the node in openSet having the lowest fScore[] value
-#         if current = goal
-#             return reconstruct_path(cameFrom, current)
-#
-#         openSet.Remove(current)
-#         for each neighbor of current
-#             // d(current,neighbor) is the weight of the edge from current to neighbor
-#             // tentative_gScore is the distance from start to the neighbor through current
-#             tentative_gScore := gScore[current] + d(current, neighbor)
-#             if tentative_gScore < gScore[neighbor]
-#                 // This path to neighbor is better than any previous one. Record it!
-#                 cameFrom[neighbor] := current
-#                 gScore[neighbor] := tentative_gScore
-#                 fScore[neighbor] := gScore[neighbor] + h(neighbor)
-#                 if neighbor not in openSet
-#                     openSet.add(neighbor)
-#
-#     // Open set is empty but goal was never reached
-#     return failure
-#
-#
+def reconstruct_path(came_from, current):
+    """reconstruct the path
+
+    current is the end point
+    came_from is dict whose keys are coordinates and values are the previous coordinates"""
+    total_path = [current]
+    while current in came_from.Keys:
+        current = came_from[current]
+        total_path.append(current)
+    total_path.reverse()
+    return total_path
+
+
+def a_star(unit, goal, game_map):
+    """A* finds a path from the units location to goal.
+
+    game_map is the map object with terrain.
+    unit.cannot_enter is a list of impassible terrain
+
+    from the wiki page: https://en.wikipedia.org/wiki/A*_search_algorithm"""
+
+    # The set of discovered nodes that may need to be (re-)expanded.
+    # Initially, only the start node is known.
+    start = unit.coords
+    open_set = set([start])
+
+    # For node n, cameFrom[n] is the node immediately preceding it on the cheapest path from start to n currently known.
+    came_from = {}
+
+    #For node n, g_score[n] is the cost of the cheapest path from start to n currently known.
+    g_score = Map('G score', game_map.dims, 999999999, 9999999999)
+    g_score[start] = 0
+
+    #For node n, f_score[n] = g_score[n] + h(n).
+    f_score = Map('F score', game_map.dims, 999999999, 9999999999)
+    f_score[start] = ch_distance(start, goal)
+
+    while len(open_set) > 0:
+        current = min([kv for kv in f_score.items()], key=lambda i: i[1])[0]
+        if current == goal:
+            return reconstruct_path(came_from, current)
+
+        open_set.remove(current)
+        for neighbor in game_map.neighbors(current):
+            #d(current, neighbor) is the weight of the edge from current to neighbor
+            #tentative_g_score is the distance from start to the neighbor through current
+            if game_map[neighbor] not in unit.cannot_enter:
+                tentative_g_score = g_score[current] + 1
+            else:
+                tentative_g_score = g_score[neighbor]
+            if tentative_g_score < g_score[neighbor]:
+                #This path to neighbor is better than any previous one. Record it!
+                came_from[neighbor] = current
+                g_score[neighbor] = tentative_g_score
+                f_score[neighbor] = g_score[neighbor] + ch_distance(start, neighbor)
+                if neighbor not in open_set:
+                    open_set.add(neighbor)
+    #open_set is empty but goal was never reached
+    return False
+
+

@@ -21,7 +21,7 @@
 import pygame.time
 from pygame.locals import K_KP1, K_KP2, K_KP3, K_KP4, K_KP6, K_KP7, K_KP8, K_KP9
 import random
-from BaseObjects import Unit
+from BaseObjects import Unit, a_star
 from Cities import City
 from GroundUnits import Infantry
 
@@ -74,8 +74,13 @@ class AI():
     def move_unit(self, target):
         """Move the moving_unit towards the target if it can"""
         dir = self.moving_unit.direction_to(target)
-        new_coords = (self.moving_unit.coords[0]+dir[0],
-                      self.moving_unit.coords[1]+dir[1])
+        print("{}'s {} at {} moving to {} path:".format(self.player.name,
+                                                        self.moving_unit.name,
+                                                        self.moving_unit.coords,
+                                                        target.coords))
+        path_to_target = a_star(self.moving_unit, target.coords, self.game.map)
+        new_coords = path_to_target[1]
+        print("{}".format(path_to_target))
         while True:
             u = self.moving_unit.check_collision(new_coords, self.game)
             if isinstance(u, City):
