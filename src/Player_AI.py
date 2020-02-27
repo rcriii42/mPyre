@@ -21,7 +21,8 @@
 import pygame.time
 from pygame.locals import K_KP1, K_KP2, K_KP3, K_KP4, K_KP6, K_KP7, K_KP8, K_KP9
 import random
-from BaseObjects import Unit, a_star
+from copy import copy
+from BaseObjects import Unit, a_star, Map
 from Cities import City
 from GroundUnits import Infantry
 
@@ -52,6 +53,7 @@ class AI():
         return a list with messages for the game window:
         'End_Turn': end my turn
         'select', Unit: select the given unit
+        'move', Unit, key: move the given unit in the direction indicated by key
         """
         pygame.time.wait(450)
         self.moving_unit = self.player.next_to_move()
@@ -62,11 +64,15 @@ class AI():
         elif self.moving_unit:
             t = self.select_target(self.moving_unit)
             dir, key = self.move_unit(t)
-
-            # print("{} target is {}, moving {}".format(self.moving_unit.name,
-            #                                          t.name,
-            #                                           dir))
-            return ['move', self.moving_unit, key]
+            if dir and key:
+                # print("{} target is {}, moving {}".format(self.moving_unit.name,
+                #                                          t.name,
+                #                                           dir))
+                return ['move', self.moving_unit, key]
+            else:
+                self.moving_unit.moved = self.moving_unit.move_speed
+                self.moving_unit.selected = False
+                self.moving_unit = None
         else:
             self.moving_unit_selected = False
             return ["End Turn"]
@@ -78,9 +84,18 @@ class AI():
                                                         self.moving_unit.name,
                                                         self.moving_unit.coords,
                                                         target.coords))
-        path_to_target = a_star(self.moving_unit, target.coords, self.game.map)
-        new_coords = path_to_target[1]
+        adj_map = copy(self.game.map)
+        for u in self.player.units:
+            adj_map[u.coords] = 'edge' #mark friendly units as impassible
+        path_to_target = a_star(self.moving_unit.coords, target.coords, adj_map,
+                                self.moving_unit.cannot_enter)
+        if path_to_target:
+            new_coords = path_to_target[1]
+        else:
+            return False, False
         print("{}".format(path_to_target))
+        print("{}: {}".format(new_coords,
+                              self.game.map[new_coords]))
         while True:
             u = self.moving_unit.check_collision(new_coords, self.game)
             if isinstance(u, City):
