@@ -29,7 +29,6 @@ import pygame
 
 from GraphicUtils import colors
 
-
 infantry_list = ["Infantry",
                  "Grenadiers",
                  "Halbardiers",
