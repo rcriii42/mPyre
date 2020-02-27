@@ -239,7 +239,7 @@ def reconstruct_path(came_from, current):
     current is the end point
     came_from is dict whose keys are coordinates and values are the previous coordinates"""
     total_path = [current]
-    while current in came_from.Keys:
+    while current in came_from.keys():
         current = came_from[current]
         total_path.append(current)
     total_path.reverse()
@@ -271,7 +271,10 @@ def a_star(unit, goal, game_map):
     f_score[start] = ch_distance(start, goal)
 
     while len(open_set) > 0:
-        current = min([kv for kv in f_score.items()], key=lambda i: i[1])[0]
+        current = min([kv for kv in f_score.items() if kv[0] in open_set], key=lambda i: i[1])[0]
+        print("{} fscore: {} gscore: {}".format(current,
+                                                f_score[current],
+                                                g_score[current]))
         if current == goal:
             return reconstruct_path(came_from, current)
 
@@ -279,6 +282,9 @@ def a_star(unit, goal, game_map):
         for neighbor in game_map.neighbors(current):
             #d(current, neighbor) is the weight of the edge from current to neighbor
             #tentative_g_score is the distance from start to the neighbor through current
+            print("{} is {} is it in {}?".format(neighbor,
+                                                 game_map[neighbor],
+                                                 unit.cannot_enter))
             if game_map[neighbor] not in unit.cannot_enter:
                 tentative_g_score = g_score[current] + 1
             else:
@@ -287,7 +293,7 @@ def a_star(unit, goal, game_map):
                 #This path to neighbor is better than any previous one. Record it!
                 came_from[neighbor] = current
                 g_score[neighbor] = tentative_g_score
-                f_score[neighbor] = g_score[neighbor] + ch_distance(start, neighbor)
+                f_score[neighbor] = g_score[neighbor] + ch_distance(neighbor, goal)
                 if neighbor not in open_set:
                     open_set.add(neighbor)
     #open_set is empty but goal was never reached
