@@ -272,9 +272,9 @@ def a_star(start, goal, game_map,
 
     while len(open_set) > 0:
         current = min([kv for kv in f_score.items() if kv[0] in open_set], key=lambda i: i[1])[0]
-        print("{} fscore: {} gscore: {}".format(current,
-                                                f_score[current],
-                                                g_score[current]))
+        # print("{} fscore: {} gscore: {}".format(current,
+        #                                         f_score[current],
+        #                                         g_score[current]))
         if current == goal:
             return reconstruct_path(came_from, current)
 
@@ -282,9 +282,9 @@ def a_star(start, goal, game_map,
         for neighbor in game_map.neighbors(current):
             #d(current, neighbor) is the weight of the edge from current to neighbor
             #tentative_g_score is the distance from start to the neighbor through current
-            print("{} is {} is it in {}?".format(neighbor,
-                                                 game_map[neighbor],
-                                                 cannot_enter))
+            # print("{} is {} is it in {}?".format(neighbor,
+            #                                      game_map[neighbor],
+            #                                      cannot_enter))
             if game_map[neighbor] not in cannot_enter:
                 tentative_g_score = g_score[current] + 1
             else:
