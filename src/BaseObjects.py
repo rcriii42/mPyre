@@ -246,17 +246,18 @@ def reconstruct_path(came_from, current):
     return total_path
 
 
-def a_star(unit, goal, game_map):
+def a_star(start, goal, game_map,
+           cannot_enter=['edge', 'water']):
     """A* finds a path from the units location to goal.
 
+    start and goal are 2D coordinates
     game_map is the map object with terrain.
-    unit.cannot_enter is a list of impassible terrain
+    cannot_enter is a list of impassible terrain
 
     from the wiki page: https://en.wikipedia.org/wiki/A*_search_algorithm"""
 
     # The set of discovered nodes that may need to be (re-)expanded.
     # Initially, only the start node is known.
-    start = unit.coords
     open_set = set([start])
 
     # For node n, cameFrom[n] is the node immediately preceding it on the cheapest path from start to n currently known.
@@ -284,8 +285,8 @@ def a_star(unit, goal, game_map):
             #tentative_g_score is the distance from start to the neighbor through current
             print("{} is {} is it in {}?".format(neighbor,
                                                  game_map[neighbor],
-                                                 unit.cannot_enter))
-            if game_map[neighbor] not in unit.cannot_enter:
+                                                 cannot_enter))
+            if game_map[neighbor] not in cannot_enter:
                 tentative_g_score = g_score[current] + 1
             else:
                 tentative_g_score = g_score[neighbor]
