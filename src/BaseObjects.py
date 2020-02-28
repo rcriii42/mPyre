@@ -272,9 +272,9 @@ def a_star(start, goal, game_map,
 
     while len(open_set) > 0:
         current = min([kv for kv in f_score.items() if kv[0] in open_set], key=lambda i: i[1])[0]
-        # print("{} fscore: {} gscore: {}".format(current,
-        #                                         f_score[current],
-        #                                         g_score[current]))
+        print("{} fscore: {} gscore: {}".format(current,
+                                                f_score[current],
+                                                g_score[current]))
         if current == goal:
             return reconstruct_path(came_from, current)
 
