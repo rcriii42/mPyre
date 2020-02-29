@@ -48,6 +48,27 @@ class MyTestCase(unittest.TestCase):
         self.assertIn((9, 9), route)
         self.assertEqual(11, len(route))
 
+    def test_multiple_routes(self):
+        """
+         01234567890
+        0EEEEEEEEEEE
+        1Es....PPPPE
+        2EP.PPP.PPPE
+        3EPP.PPP.PPE
+        4EPPP.PPP.PE
+        5EPPPP....gE
+        6EPPPPPPPPPE
+        7EPPPPPPPPPE
+        8EPPPPPPPPPE
+        9EPPPPPPPPPE
+        0EEEEEEEEEEE
+        """
+        test_map = Map()
+        route = a_star((1, 1), (9, 5), test_map)
+        self.assertIn((1, 1), route)
+        self.assertIn((9, 5), route)
+        self.assertEqual(9, len(route))
+
     def test_indirect_route2(self):
         """
          01234567890
