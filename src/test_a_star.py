@@ -36,7 +36,6 @@ class MyTestCase(unittest.TestCase):
         8EPPPPPPP.PE
         9EPPPPPPPPgE
         0EEEEEEEEEEE
-        Not the route I would have chosen, but the same length
         """
         test_map = Map()
         for x in range(1, 7):
@@ -48,7 +47,6 @@ class MyTestCase(unittest.TestCase):
         self.assertIn((7, 5), route)
         self.assertIn((9, 9), route)
         self.assertEqual(11, len(route))
-
 
     def test_indirect_route2(self):
         """
@@ -64,7 +62,6 @@ class MyTestCase(unittest.TestCase):
         8EPPPP.PPPPE
         9EPPPPP...gE
         0EEEEEEEEEEE
-        Not the route I would have chosen, but the same length
         """
         test_map = Map()
         for x in range(3, 10):
